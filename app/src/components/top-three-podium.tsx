@@ -9,6 +9,9 @@ export type TopThreeItem = {
 
 export type TopThreePodiumProps = {
   items: TopThreeItem[]
+  /** Defaults to leaderboard copy */
+  titleKey?: string
+  subtitleKey?: string
 }
 
 const BADGE_BY_RANK: [string, string, string] = [
@@ -17,7 +20,11 @@ const BADGE_BY_RANK: [string, string, string] = [
   'bg-orange-100 text-orange-700',
 ]
 
-export function TopThreePodium({ items }: TopThreePodiumProps) {
+export function TopThreePodium({
+  items,
+  titleKey = 'leaderboard.topThreeTitle',
+  subtitleKey = 'leaderboard.topThreeSubtitle',
+}: TopThreePodiumProps) {
   const { t } = useTranslation()
   if (items.length === 0) return null
 
@@ -25,10 +32,10 @@ export function TopThreePodium({ items }: TopThreePodiumProps) {
     <div>
       <h3 className="mb-1 flex items-center gap-2 text-sm font-semibold text-zinc-900">
         <Trophy className="size-4 text-zinc-500" />
-        {t('leaderboard.topThreeTitle')}
+        {t(titleKey)}
       </h3>
       <p className="mb-3 text-xs leading-relaxed text-zinc-500">
-        {t('leaderboard.topThreeSubtitle')}
+        {t(subtitleKey)}
       </p>
       <div className="grid gap-2 sm:grid-cols-3">
         {items.map((item, idx) => {

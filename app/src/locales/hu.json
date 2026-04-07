@@ -494,6 +494,8 @@
       "globalRank": "Ranglista #",
       "emptyGroup": "A csoport üres. Adj hozzá tagokat a profil linkjük segítségével!",
       "tipsTitle": "Tippek összehasonlítása",
+      "topThreeTitle": "Top 3 a csoportban",
+      "topThreeSubtitle": "A legpontosabb tippek ebben a csoportban a hivatalos eredmények alapján.",
       "confirmRemove": "Biztosan eltávolítod {{name}}-t a csoportból?",
       "removeButton": "Eltávolítás",
       "editName": "Név szerkesztése",
