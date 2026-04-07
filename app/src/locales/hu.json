@@ -59,6 +59,7 @@
     "listStepTitle": "2. lépés (opcionális): Pártlista",
     "listStepDescription": "A pártlista kitöltése opcionális ebben az iterációban, de a verseny pontosságát növeli.",
     "pmCandidate": "Miniszterelnök-jelölt",
+    "listWinner": "Listagyőztes",
     "partyPercent": "Pártlista %",
     "listPercentHint": "Minden százalék kötelező, és összesen 100%-ot kell kiadniuk. Egy mező szerkesztésekor a maradék automatikusan elosztásra kerül.",
     "mandatoryHint": "Véglegesítéshez: győztes pártlista, minden százalék kitöltése (összesen 100%), és miniszterelnök-jelölt választás.",

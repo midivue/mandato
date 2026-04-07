@@ -10,6 +10,7 @@ import { T } from '@/components/trans'
 import type { VotingDraft, PercentFieldId } from '@/hooks/use-prediction'
 
 import { PartyGrid } from './party-grid'
+import { BallotPartyCompact } from './ballot-party-compact'
 import { NationalitiesRow } from './nationalities-row'
 import { ParticipationRow } from './participation-row'
 import { GuideSection } from './guide-section'
@@ -108,23 +109,30 @@ export function BallotPage({
           )}
 
           <div className="space-y-4">
-            <PartyGrid draft={draft} canEdit={canEdit} updateDraft={updateDraft} updatePercent={updatePercent} />
+            <div className="@container">
+              <div className="@min-[52rem]:hidden">
+                <BallotPartyCompact draft={draft} canEdit={canEdit} updateDraft={updateDraft} updatePercent={updatePercent} />
+              </div>
+              <div className="hidden @min-[52rem]:block">
+                <PartyGrid draft={draft} canEdit={canEdit} updateDraft={updateDraft} updatePercent={updatePercent} />
+              </div>
+            </div>
             <div className="grid gap-4 md:grid-cols-2">
               <NationalitiesRow draft={draft} canEdit={canEdit} updatePercent={updatePercent} />
               <ParticipationRow draft={draft} canEdit={canEdit} updateDraft={updateDraft} />
             </div>
-            <div className="flex items-center justify-between gap-2">
+            <div className="flex flex-wrap items-center justify-center gap-2 sm:flex-nowrap sm:justify-between">
               <button
                 type="button"
                 disabled={!canEdit}
                 onClick={resetBallot}
-                className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-xs font-semibold uppercase tracking-wide text-zinc-500 transition-colors hover:border-zinc-400 hover:text-zinc-700 disabled:pointer-events-none disabled:opacity-50 sm:w-auto"
+                className="order-2 flex-1 basis-[calc(50%-0.25rem)] rounded-md border border-zinc-300 bg-white px-3 py-2 text-xs font-semibold uppercase tracking-wide text-zinc-500 transition-colors hover:border-zinc-400 hover:text-zinc-700 disabled:pointer-events-none disabled:opacity-50 sm:order-none sm:flex-none sm:basis-auto sm:w-auto"
               >
                 {t('flow.resetBallot')}
               </button>
 
               <span className={[
-                'shrink-0 rounded-full px-3 py-1 text-xs font-semibold tabular-nums',
+                'order-1 w-full shrink-0 rounded-full px-3 py-1 text-center text-xs font-semibold tabular-nums sm:order-none sm:w-auto',
                 percentTotal > 100.05
                   ? 'bg-red-100 text-red-700'
                   : Math.abs(percentTotal - 100) < 0.1
@@ -138,7 +146,7 @@ export function BallotPage({
                 type="button"
                 disabled={percentTotal > 100.05}
                 onClick={() => document.getElementById('ballot-session')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
-                className="inline-flex w-full items-center justify-center gap-1.5 rounded-md border border-zinc-300 bg-white px-3 py-2 text-xs font-semibold uppercase tracking-wide text-zinc-500 transition-colors hover:border-zinc-400 hover:text-zinc-700 disabled:pointer-events-none disabled:opacity-50 sm:w-auto"
+                className="order-3 inline-flex flex-1 basis-[calc(50%-0.25rem)] items-center justify-center gap-1.5 rounded-md border border-zinc-300 bg-white px-3 py-2 text-xs font-semibold uppercase tracking-wide text-zinc-500 transition-colors hover:border-zinc-400 hover:text-zinc-700 disabled:pointer-events-none disabled:opacity-50 sm:order-none sm:flex-none sm:basis-auto sm:w-auto"
               >
                 {t('flow.continueToToken')}
                 <ArrowDown className="size-3.5" aria-hidden />
