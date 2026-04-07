@@ -154,12 +154,20 @@ export function SessionPanel({
                   </Button>
                 </>
               )}
-              <Button variant="outline" className="whitespace-normal" onClick={onShowRestore}>
-                <KeyRound className="size-4 shrink-0" aria-hidden />
+              <Button
+                variant="outline"
+                className="whitespace-normal md:h-auto md:min-h-9 md:items-start md:py-2.5"
+                onClick={onShowRestore}
+              >
+                <KeyRound className="size-4 shrink-0 md:mt-0.5" aria-hidden />
                 {t('flow.restoreSession')}
               </Button>
-              <Button variant="outline" className="whitespace-normal" onClick={onShowLeaveSession}>
-                <LogOut className="size-4 shrink-0" aria-hidden />
+              <Button
+                variant="outline"
+                className="whitespace-normal md:h-auto md:min-h-9 md:items-start md:py-2.5"
+                onClick={onShowLeaveSession}
+              >
+                <LogOut className="size-4 shrink-0 md:mt-0.5" aria-hidden />
                 {t('flow.leaveSession')}
               </Button>
             </div>
