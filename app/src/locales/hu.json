@@ -187,7 +187,13 @@
     },
     "groupsTitle": "Csoportok",
     "groupRank": "{{rank}}. / {{count}} tag",
-    "noGroupRank": "Nincs még eredmény"
+    "noGroupRank": "Nincs még eredmény",
+    "compact": {
+      "party": "Párt",
+      "listPct": "Pártlista %",
+      "winner": "Győztes",
+      "pm": "MNK-jelölt"
+    }
   },
   "stats": {
     "title": "Statisztikák",

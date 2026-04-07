@@ -187,7 +187,13 @@
     },
     "groupsTitle": "Groups",
     "groupRank": "Rank {{rank}} of {{count}}",
-    "noGroupRank": "No results yet"
+    "noGroupRank": "No results yet",
+    "compact": {
+      "party": "Party",
+      "listPct": "Party list %",
+      "winner": "Winner",
+      "pm": "PM"
+    }
   },
   "stats": {
     "title": "Statistics",
