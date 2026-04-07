@@ -59,6 +59,7 @@
     "listStepTitle": "Step 2 (optional): Party list",
     "listStepDescription": "Party-list tip is optional in this iteration, but improves competition granularity.",
     "pmCandidate": "Prime minister candidate",
+    "listWinner": "List winner",
     "partyPercent": "Party list %",
     "listPercentHint": "All percentages are required and must add up to 100%. Editing one field auto-distributes the remainder.",
     "mandatoryHint": "To finalize: select a winning party, fill all percentages (must total 100%), and choose a PM candidate.",
