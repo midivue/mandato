@@ -7,6 +7,7 @@ import { RankBadge } from '@/components/rank-badge'
 import { Button } from '@/components/ui/button'
 import { RESULTS_AVAILABLE } from '@mandatoto/shared/types'
 import type { LeaderboardEntry } from '@mandatoto/shared/types'
+import { formatDateTimeBudapest } from '@/lib/date-format'
 import { ScoreTooltip } from './score-tooltip'
 
 type LeaderboardTableProps = {
@@ -213,10 +214,7 @@ export function LeaderboardTable({ entries, loading, currentToken }: Leaderboard
                     </td>
                     <td className="px-3 py-2.5 text-right text-xs tabular-nums text-zinc-500">
                       {entry.finalizedAt
-                        ? new Date(entry.finalizedAt).toLocaleString(undefined, {
-                            year: 'numeric', month: '2-digit', day: '2-digit',
-                            hour: '2-digit', minute: '2-digit', second: '2-digit',
-                          })
+                        ? formatDateTimeBudapest(entry.finalizedAt)
                         : '—'}
                     </td>
                   </tr>
