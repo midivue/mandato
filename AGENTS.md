@@ -36,6 +36,8 @@ Or separately: `cd worker && npx wrangler dev --port 8787` and `cd app && npm ru
 
 Vite proxies `/api/*` to the local wrangler server. No Docker needed.
 
+**Remote dev API (optional):** Default `npm run dev` uses **local D1** via wrangler, not `api.dev.mandato.hu`. To hit the deployed dev Worker and shared dev D1 from the SPA only, run `npm run dev:remote` (sets `VITE_API_URL=https://api.dev.mandato.hu`) or put that variable in `app/.env.local` and run `npm run dev -w app`. You still need `VITE_TURNSTILE_SITEKEY` (and a valid dev site key) if the dev Worker enforces Turnstile.
+
 ## Tech Stack
 
 | Layer | Technology |
