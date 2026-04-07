@@ -32,7 +32,7 @@ export function AppRouter({ page, prediction }: AppRouterProps) {
   const {
     draft, loading, saving, error, finalizeError, canEdit, finalizeReady,
     isFinalized, showFinalizedBadge, isDirty, lastSavedAt, showSaveReminder,
-    updateDraft, updatePercent, resetBallot, saveDraft, finalize,
+    percentTotal, updateDraft, updatePercent, resetBallot, saveDraft, finalize,
     restoreSession, deletePrediction, leaveSession,
   } = prediction
 
@@ -85,6 +85,7 @@ export function AppRouter({ page, prediction }: AppRouterProps) {
       isDirty={isDirty}
       lastSavedAt={lastSavedAt}
       showSaveReminder={showSaveReminder}
+      percentTotal={percentTotal}
       updateDraft={updateDraft}
       updatePercent={updatePercent}
       resetBallot={resetBallot}

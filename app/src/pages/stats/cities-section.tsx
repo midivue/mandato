@@ -82,7 +82,7 @@ export function CitiesSection({ cityCounts, noSettlement }: {
       <h3 className="mb-1 text-sm font-semibold text-zinc-900">{t('stats.citiesTitle')}</h3>
       <p className="mb-3 text-xs text-zinc-500">{t('stats.citiesDescription')}</p>
       <div className="grid gap-4 md:grid-cols-2">
-        <div className="flex flex-col justify-center rounded-lg border border-zinc-200 bg-zinc-50/50 p-4">
+        <div className="flex min-h-44 flex-col justify-center rounded-lg border border-zinc-200 bg-zinc-50/50 p-4 md:min-h-64">
           {heroItem && (
             <div className="mb-2 text-center">
               <span

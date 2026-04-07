@@ -81,6 +81,8 @@ npm run dev                  # Frontend :5174 + API :8787
 
 Vite proxies `/api/*` to the local Wrangler server. No Docker needed.
 
+To use the **deployed** dev API and D1 instead (`api.dev.mandato.hu`), run `npm run dev:remote` (frontend only; set `VITE_TURNSTILE_SITEKEY` in `app/.env.local` if Turnstile is enabled there).
+
 ---
 
 ## Releases

@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { isLocalDraft } from '@/hooks/use-prediction'
 import type { VotingDraft } from '@/hooks/use-prediction'
 import { CUTOFF_AT } from '@mandatoto/shared/types'
+import { formatDateTimeBudapest } from '@/lib/date-format'
 
 const CUTOFF_DATE = new Date(CUTOFF_AT)
 
@@ -124,11 +125,11 @@ export function ActionBar({
         <div className="space-y-0.5 text-center sm:text-left">
           <p>
             {lastSavedAt
-              ? `${t('flow.lastSaved')} ${lastSavedAt.toLocaleString()}`
+              ? `${t('flow.lastSaved')} ${formatDateTimeBudapest(lastSavedAt)}`
               : isFinalized && draft.finalizedAt
-                ? `${t('flow.lastFinalized')} ${new Date(draft.finalizedAt).toLocaleString()}`
+                ? `${t('flow.lastFinalized')} ${formatDateTimeBudapest(draft.finalizedAt)}`
                 : !isLocalDraft(draft) && draft.updatedAt
-                  ? `${t('flow.lastSaved')} ${new Date(draft.updatedAt).toLocaleString()}`
+                  ? `${t('flow.lastSaved')} ${formatDateTimeBudapest(draft.updatedAt)}`
                   : t('flow.notSavedYet')
             }
           </p>
@@ -140,7 +141,9 @@ export function ActionBar({
           )}
           {finalizeError && <p className="font-medium text-red-600">{finalizeError}</p>}
         </div>
-        <p className="text-center sm:text-right">{t('flow.cutoffLabel')} {CUTOFF_DATE.toLocaleString()}</p>
+        <p className="text-center sm:text-right">
+          {t('flow.cutoffLabel')} {formatDateTimeBudapest(CUTOFF_DATE)}
+        </p>
       </div>
     </>
   )

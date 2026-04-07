@@ -494,6 +494,8 @@
       "globalRank": "Global #",
       "emptyGroup": "The group is empty. Add members using their profile share links!",
       "tipsTitle": "Tips comparison",
+      "topThreeTitle": "Top 3 in this group",
+      "topThreeSubtitle": "The most accurate tips in this group based on official results.",
       "confirmRemove": "Are you sure you want to remove {{name}} from the group?",
       "removeButton": "Remove",
       "editName": "Edit name",

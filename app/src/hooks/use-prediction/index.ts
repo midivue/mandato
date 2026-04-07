@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { CUTOFF_AT } from '@mandatoto/shared/types'
 import { ALL_PERCENT_FIELDS } from './types'
-import { getPercentValue, isValidPercent } from './percent-math'
+import { getPercentValue, isBelowThreshold, isValidPercent } from './percent-math'
 import { usePredictionInit } from './use-prediction-init'
 import { usePredictionDraft } from './use-prediction-draft'
 import { useSaveReminder } from './use-save-reminder'
@@ -77,7 +77,10 @@ export function usePrediction() {
     : false
   const percentSumValid = Math.abs(percentTotal - 100) < 0.1
   const listWinnerSelected = Boolean(draft?.listPartyId)
-  const pmStepValid = Boolean(draft?.pmCandidateId)
+  const pmPartyAboveThreshold = draft?.pmCandidateId
+    ? !isBelowThreshold(getPercentValue(draft, draft.pmCandidateId))
+    : true
+  const pmStepValid = Boolean(draft?.pmCandidateId) && pmPartyAboveThreshold
   const finalizeReady =
     pmStepValid && listWinnerSelected && allPercentsValid && percentSumValid && canEdit
   const isFinalized = draft?.status === 'finalized'

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Check, Copy, Eye, EyeOff, KeyRound, Loader2, MapPin, Trophy, User, Users } from 'lucide-react'
 import { useApiQuery } from '@/hooks/use-api-query'
 import { getSharedPrediction } from '@/lib/api-client'
+import { formatDateTimeBudapest } from '@/lib/date-format'
 
 import { Button } from '@/components/ui/button'
 import { T } from '@/components/trans'
@@ -427,7 +428,7 @@ export function ProfilePage({ shareToken, restoreSession }: ProfilePageProps) {
 
           {prediction.finalizedAt && (
             <p className="text-xs text-zinc-500">
-              {t('profile.finalizedAt')} {new Date(prediction.finalizedAt).toLocaleString()}
+              {t('profile.finalizedAt')} {formatDateTimeBudapest(prediction.finalizedAt)}
             </p>
           )}
         </CardContent>

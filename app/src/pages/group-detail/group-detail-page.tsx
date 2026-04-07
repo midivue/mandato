@@ -1,17 +1,18 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Loader2, Users } from 'lucide-react'
 import * as api from '@/lib/api-client'
 
+import { TopThreePodium } from '@/components/top-three-podium'
 import { PageHeader } from '@/components/page-header'
 import { Card, CardContent } from '@/components/ui/card'
 import { GroupInfoBoxes } from '@/components/info-boxes'
+import { RESULTS_AVAILABLE } from '@mandatoto/shared/types'
 import type { GroupDetail, GroupMember } from '@mandatoto/shared/types'
 
-import { CUTOFF_MS, removeGroupFromLocalStorage } from './group-detail-utils'
+import { CUTOFF_MS, removeGroupFromLocalStorage, sortMembersByGroupScore } from './group-detail-utils'
 import { GroupHeader } from './group-header'
 import { AddMemberSection } from './add-member-section'
-import { MemberLeaderboard } from './member-leaderboard'
 import { TipsComparison } from './tips-comparison'
 import { RemoveMemberModal } from './remove-member-modal'
 import { LeaveGroupModal } from './leave-group-modal'
@@ -37,6 +38,18 @@ export function GroupDetailPage({ groupToken, userToken, userShareToken }: Group
     group !== null &&
     group.members.some((m) => m.shareToken === userShareToken)
   const canEdit = isMember && isBeforeCutoff
+
+  const groupPodiumItems = useMemo(() => {
+    if (!group) return []
+    return sortMembersByGroupScore(group.members)
+      .filter((m) => m.score != null)
+      .slice(0, 3)
+      .map((m) => ({
+        displayName: m.displayName,
+        score: m.score!,
+        shareToken: m.shareToken,
+      }))
+  }, [group])
 
   useEffect(() => {
     let cancelled = false
@@ -109,14 +122,20 @@ export function GroupDetailPage({ groupToken, userToken, userShareToken }: Group
             />
           )}
 
-          <MemberLeaderboard
+          {RESULTS_AVAILABLE && groupPodiumItems.length > 0 && (
+            <TopThreePodium
+              items={groupPodiumItems}
+              titleKey="groups.detail.topThreeTitle"
+              subtitleKey="groups.detail.topThreeSubtitle"
+            />
+          )}
+
+          <TipsComparison
             members={group.members}
             userShareToken={userShareToken}
             canEdit={canEdit}
             onConfirmRemove={setConfirmRemove}
           />
-
-          <TipsComparison members={group.members} userShareToken={userShareToken} />
         </CardContent>
       </Card>
 

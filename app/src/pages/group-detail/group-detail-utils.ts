@@ -13,6 +13,17 @@ export const PCT_KEYS: { id: PartyId; key: keyof GroupMember }[] = [
   { id: 'fidesz_kdnp', key: 'pctFideszKdnp' },
 ]
 
+export function sortMembersByGroupScore(members: GroupMember[]): GroupMember[] {
+  return [...members].sort((a, b) => {
+    const sa = a.score
+    const sb = b.score
+    if (sa != null && sb != null && sa !== sb) return sb - sa
+    if (sa != null && sb == null) return -1
+    if (sa == null && sb != null) return 1
+    return a.groupRank - b.groupRank
+  })
+}
+
 export function pctDeviationClass(guess: number | null, actual: number): string {
   if (!RESULTS_AVAILABLE || guess === null) return ''
   const abs = Math.abs(guess - actual)

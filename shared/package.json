@@ -4,5 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "main": "./types.ts",
-  "types": "./types.ts"
+  "types": "./types.ts",
+  "exports": {
+    "./types": "./types.ts",
+    "./types.ts": "./types.ts",
+    "./scoring": "./scoring.ts",
+    "./scoring.ts": "./scoring.ts"
+  }
 }

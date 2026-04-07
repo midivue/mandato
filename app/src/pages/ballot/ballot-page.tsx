@@ -33,6 +33,7 @@ export type BallotPageProps = {
   isDirty: boolean
   lastSavedAt: Date | null
   showSaveReminder: boolean
+  percentTotal: number
   updateDraft: (updater: (prev: VotingDraft) => VotingDraft) => void
   updatePercent: (field: PercentFieldId, value: string) => void
   resetBallot: () => void
@@ -46,7 +47,7 @@ export type BallotPageProps = {
 export function BallotPage({
   draft, saving, finalizeError, canEdit, finalizeReady,
   isFinalized, showFinalizedBadge, isDirty, lastSavedAt, showSaveReminder,
-  updateDraft, updatePercent, resetBallot, saveDraft, finalize,
+  percentTotal, updateDraft, updatePercent, resetBallot, saveDraft, finalize,
   restoreSession, deletePrediction, leaveSession,
 }: BallotPageProps) {
   const { t } = useTranslation()
@@ -121,10 +122,23 @@ export function BallotPage({
               >
                 {t('flow.resetBallot')}
               </button>
+
+              <span className={[
+                'shrink-0 rounded-full px-3 py-1 text-xs font-semibold tabular-nums',
+                percentTotal > 100.05
+                  ? 'bg-red-100 text-red-700'
+                  : Math.abs(percentTotal - 100) < 0.1
+                    ? 'bg-emerald-100 text-emerald-700'
+                    : 'bg-amber-100 text-amber-700',
+              ].join(' ')}>
+                {t('flow.percentTotal')}: {percentTotal}%
+              </span>
+
               <button
                 type="button"
+                disabled={percentTotal > 100.05}
                 onClick={() => document.getElementById('ballot-session')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
-                className="inline-flex w-full items-center justify-center gap-1.5 rounded-md border border-zinc-300 bg-white px-3 py-2 text-xs font-semibold uppercase tracking-wide text-zinc-500 transition-colors hover:border-zinc-400 hover:text-zinc-700 sm:w-auto"
+                className="inline-flex w-full items-center justify-center gap-1.5 rounded-md border border-zinc-300 bg-white px-3 py-2 text-xs font-semibold uppercase tracking-wide text-zinc-500 transition-colors hover:border-zinc-400 hover:text-zinc-700 disabled:pointer-events-none disabled:opacity-50 sm:w-auto"
               >
                 {t('flow.continueToToken')}
                 <ArrowDown className="size-3.5" aria-hidden />

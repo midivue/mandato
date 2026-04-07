@@ -67,15 +67,27 @@ export function redistributePercents(
   }
 
   if (autoFields.length > 0) {
-    const perField = remaining / autoFields.length
-    const base = Math.floor(perField * 100) / 100
+    // Use current values as proportional weights so ratios are preserved.
+    // If all auto fields are empty/zero, fall back to equal distribution.
+    const autoWeights = autoFields.map((f) => {
+      const str = f === 'nationalities' ? newNatPercent : newListPercents[f]
+      const n = Number(str)
+      return Number.isFinite(n) && n > 0 ? n : 0
+    })
+    const weightSum = autoWeights.reduce((a, b) => a + b, 0)
 
+    let assigned = 0
     for (let i = 0; i < autoFields.length; i++) {
       const field = autoFields[i]
-      const val =
-        i === autoFields.length - 1
-          ? Math.round((remaining - base * (autoFields.length - 1)) * 100) / 100
-          : base
+      let val: number
+      if (i === autoFields.length - 1) {
+        val = Math.round((remaining - assigned) * 100) / 100
+      } else if (weightSum > 0) {
+        val = Math.round(remaining * (autoWeights[i] / weightSum) * 100) / 100
+      } else {
+        val = Math.floor((remaining / autoFields.length) * 100) / 100
+      }
+      assigned += val
       const strVal = String(val)
       if (field === 'nationalities') {
         newNatPercent = strVal
@@ -85,19 +97,10 @@ export function redistributePercents(
     }
   }
 
-  let pmCandidateId = draft.pmCandidateId
-  if (pmCandidateId) {
-    const pmPct = newListPercents[pmCandidateId]
-    if (isBelowThreshold(pmPct)) {
-      pmCandidateId = null
-    }
-  }
-
   return {
     ...draft,
     listPercents: newListPercents,
     nationalitiesPercent: newNatPercent,
-    pmCandidateId,
   }
 }
 

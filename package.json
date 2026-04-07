@@ -3,9 +3,13 @@
   "private": true,
   "workspaces": ["app", "worker", "shared"],
   "scripts": {
-    "dev": "concurrently --names api,app --prefix-colors blue,green \"npm run dev -w worker\" \"npm run dev -w app\"",
-    "build": "npm run build -w app && npx tsc -p worker --noEmit",
-    "lint": "npm run lint -w app && npm run lint -w worker"
+    "dev": "npx concurrently --names api,app --prefix-colors blue,green \"npm run dev -w worker\" \"npm run dev -w app\"",
+    "dev:remote": "VITE_API_URL=https://api.dev.mandato.hu npm run dev -w app",
+    "build": "npm run build -w app && npx tsc -p worker --noEmit && npx tsc -p worker/tsconfig.scripts.json --noEmit",
+    "lint": "npm run lint -w app && npm run lint -w worker",
+    "db:score": "npm run db:score -w worker",
+    "db:score:dev": "npm run db:score:dev -w worker",
+    "db:score:prod": "npm run db:score:prod -w worker"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"
