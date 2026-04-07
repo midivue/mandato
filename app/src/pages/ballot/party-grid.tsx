@@ -57,33 +57,33 @@ export function PartyGrid({ draft, canEdit, updateDraft, updatePercent }: PartyG
                     ? option.id
                     : prev.pmCandidateId,
                 }))}
-                className={`group relative flex w-full flex-col items-center bg-white p-4 text-center transition md:min-h-[25rem] ${
+                className={`group relative flex w-full flex-col items-center bg-white px-3 pb-2 pt-3 text-center transition md:min-h-[25rem] md:p-4 ${
                   !canEdit ? 'opacity-75' : ''
                 }`}
               >
-                <p className="mb-3 text-xs font-semibold text-zinc-700">{option.ballotNumber}.</p>
+                <p className="mb-1.5 text-xs font-semibold text-zinc-700 md:mb-3">{option.ballotNumber}.</p>
                 <img
                   src={option.logoSrc}
                   alt={option.shortName}
-                  className="mx-auto mb-4 h-12 w-auto object-contain"
+                  className="mx-auto mb-2 h-10 w-auto object-contain md:mb-4 md:h-12"
                 />
-                <div className="mb-4 flex justify-center">
-                  <span className={`flex size-10 items-center justify-center overflow-hidden rounded-full border-2 ${
+                <div className="mb-2 flex justify-center md:mb-4">
+                  <span className={`flex size-11 items-center justify-center overflow-hidden rounded-full border-2 md:size-10 ${
                     isSelected ? 'border-zinc-400' : 'border-zinc-300'
                   }`}>
                     {isSelected
-                      ? <span className="text-[2rem] font-bold leading-none text-[#1616E6]">&#x2715;</span>
-                      : <span className="text-[2rem] font-bold leading-none text-zinc-900 opacity-0 transition-opacity group-hover:opacity-30">&#x2715;</span>
+                      ? <span className="text-[1.75rem] font-bold leading-none text-[#1616E6] md:text-[2rem]">&#x2715;</span>
+                      : <span className="text-[1.75rem] font-bold leading-none text-zinc-900 opacity-0 transition-opacity group-hover:opacity-30 md:text-[2rem]">&#x2715;</span>
                     }
                   </span>
                 </div>
                 <p className="text-xs font-semibold tracking-wide text-zinc-900">{option.shortName}</p>
-                <p className="mt-1 min-h-[2.8rem] break-words text-[10px] uppercase leading-tight text-zinc-600">
+                <p className="mt-0.5 min-h-[2.5rem] break-words text-[10px] uppercase leading-tight text-zinc-600 md:mt-1 md:min-h-[2.8rem]">
                   {option.fullName}
                 </p>
 
                 {/* Candidate list: hidden on mobile behind a <details>, always visible on desktop */}
-                <div className="mt-4 w-full border-t border-zinc-200 pt-3 md:hidden">
+                <div className="mt-2 w-full border-t border-zinc-200 pt-2 md:hidden">
                   <details className="group/details text-left">
                     <summary className="cursor-pointer list-none text-center text-[10px] font-semibold uppercase tracking-wide text-zinc-400 transition hover:text-zinc-600">
                       {t('flow.candidatesLabel')} ↓
@@ -95,7 +95,7 @@ export function PartyGrid({ draft, canEdit, updateDraft, updatePercent }: PartyG
                     </ul>
                   </details>
                 </div>
-                <div className="mt-5 hidden w-full border-t border-zinc-200 pt-4 md:block">
+                <div className="mt-4 hidden w-full border-t border-zinc-200 pt-4 md:mt-5 md:block">
                   <ul className="space-y-0.5 text-[10px] uppercase leading-tight text-zinc-700">
                     {option.topFiveCandidates.map((candidate) => (
                       <li key={candidate}>{candidate}</li>
@@ -105,8 +105,8 @@ export function PartyGrid({ draft, canEdit, updateDraft, updatePercent }: PartyG
               </button>
 
               {/* Percent stepper + PM selector */}
-              <div className="border-t border-zinc-200 px-3 pb-3 pt-2">
-                <span className="text-[10px] font-medium uppercase tracking-[0.06em] text-zinc-600">
+              <div className="border-t border-zinc-200 px-3 pb-2.5 pt-2 md:pb-3">
+                <span className="block w-full px-0.5 text-center text-[10px] font-medium uppercase tracking-[0.06em] text-zinc-600 md:px-0 md:text-left">
                   {t('flow.partyPercent')}
                 </span>
 
@@ -117,7 +117,7 @@ export function PartyGrid({ draft, canEdit, updateDraft, updatePercent }: PartyG
                       key={step}
                       type="button"
                       onClick={() => setActiveStep(step)}
-                      className={`h-7 rounded font-mono text-[11px] font-medium transition md:h-6 md:text-[10px] ${
+                      className={`flex min-h-9 items-center justify-center rounded px-0.5 font-mono text-[11px] font-medium transition md:h-6 md:min-h-0 md:px-0 md:text-[10px] ${
                         activeStep === step
                           ? 'bg-zinc-800 text-white'
                           : 'border border-zinc-200 bg-zinc-50 text-zinc-500 hover:border-zinc-400 hover:bg-zinc-100'
@@ -177,7 +177,7 @@ export function PartyGrid({ draft, canEdit, updateDraft, updatePercent }: PartyG
                 })()}
 
                 <div className="mt-2 border-t border-zinc-100 pt-2">
-                  <p className="mb-1 text-[10px] font-medium uppercase tracking-[0.06em] text-zinc-600">
+                  <p className="mb-1 block w-full px-0.5 text-center text-[10px] font-medium uppercase tracking-[0.06em] text-zinc-600 md:px-0 md:text-left">
                     {t('flow.pmCandidate')}
                   </p>
                   {pmOption && (() => {
@@ -195,22 +195,26 @@ export function PartyGrid({ draft, canEdit, updateDraft, updatePercent }: PartyG
                         onClick={() =>
                           updateDraft((prev) => ({ ...prev, pmCandidateId: pmOption.id }))
                         }
-                        className={`w-full rounded-md border p-2 text-center transition ${borderClass} ${belowThreshold ? 'cursor-not-allowed' : ''}`}
+                        className={`w-full rounded-md border p-1.5 text-center transition md:p-2 ${borderClass} ${belowThreshold ? 'cursor-not-allowed' : ''}`}
                       >
-                        <div className="space-y-2">
-                          <div className="relative overflow-hidden rounded">
+                        <div className="space-y-1.5 md:space-y-2">
+                          <div className="relative w-full overflow-hidden rounded">
                             <img
                               src={pmOption.portraitSrc}
                               alt={pmOption.candidateName}
-                              className={`h-20 w-full object-cover object-top transition-all duration-300 md:h-50 md:aspect-auto ${imgClass}`}
+                              className={`h-[11.7rem] w-full object-cover object-[center_22%] transition-all duration-300 md:h-52 ${imgClass}`}
                             />
                             {belowThreshold && (
-                              <img
-                                src={pmXSvg}
-                                alt=""
+                              <div
+                                className="pointer-events-none absolute inset-0 flex items-center justify-center bg-white/50"
                                 aria-hidden
-                                className="pointer-events-none absolute inset-0 h-full w-full object-fill"
-                              />
+                              >
+                                <img
+                                  src={pmXSvg}
+                                  alt=""
+                                  className="h-[45%] w-auto max-h-[6rem] object-contain"
+                                />
+                              </div>
                             )}
                           </div>
                           <p className={`truncate text-xs font-semibold transition-colors duration-300 ${
