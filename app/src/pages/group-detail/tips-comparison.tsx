@@ -5,24 +5,13 @@ import { PartyBadge } from '@/components/party-badge'
 import { PARTY_OPTIONS } from '@/data/election-options'
 import { REFERENCE_RESULT, RESULTS_AVAILABLE } from '@mandatoto/shared/types'
 import type { GroupMember } from '@mandatoto/shared/types'
-import { PCT_KEYS, pctDeviationClass } from './group-detail-utils'
+import { PCT_KEYS, pctDeviationClass, sortMembersByGroupScore } from './group-detail-utils'
 
 type TipsComparisonProps = {
   members: GroupMember[]
   userShareToken: string | null
   canEdit: boolean
   onConfirmRemove: (member: GroupMember) => void
-}
-
-export function sortMembersByGroupScore(members: GroupMember[]): GroupMember[] {
-  return [...members].sort((a, b) => {
-    const sa = a.score
-    const sb = b.score
-    if (sa != null && sb != null && sa !== sb) return sb - sa
-    if (sa != null && sb == null) return -1
-    if (sa == null && sb != null) return 1
-    return a.groupRank - b.groupRank
-  })
 }
 
 export function TipsComparison({

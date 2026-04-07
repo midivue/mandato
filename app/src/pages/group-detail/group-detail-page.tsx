@@ -10,10 +10,10 @@ import { GroupInfoBoxes } from '@/components/info-boxes'
 import { RESULTS_AVAILABLE } from '@mandatoto/shared/types'
 import type { GroupDetail, GroupMember } from '@mandatoto/shared/types'
 
-import { CUTOFF_MS, removeGroupFromLocalStorage } from './group-detail-utils'
+import { CUTOFF_MS, removeGroupFromLocalStorage, sortMembersByGroupScore } from './group-detail-utils'
 import { GroupHeader } from './group-header'
 import { AddMemberSection } from './add-member-section'
-import { TipsComparison, sortMembersByGroupScore } from './tips-comparison'
+import { TipsComparison } from './tips-comparison'
 import { RemoveMemberModal } from './remove-member-modal'
 import { LeaveGroupModal } from './leave-group-modal'
 
