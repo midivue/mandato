@@ -60,7 +60,7 @@ Vite proxies `/api/*` to the local wrangler server. No Docker needed.
 - `worker/src/db/schema-reset.sql` — Development only (`DROP TABLE` + recreate). Destroys all data.
 - `worker/src/db/migration-005-indexes.sql` — Composite indexes for common query patterns.
 - `worker/src/db/migration-006-participation-rate.sql` — Adds `participation_rate` column to existing databases.
-- npm scripts: `db:init` (safe init), `db:reset` (destructive reset), `db:migrate:indexes`, `db:migrate:participation`, `db:seed`, `db:seed-large` (1000 predictions + 8 groups).
+- npm scripts: `db:init` (safe init), `db:reset` (destructive reset), `db:migrate:indexes`, `db:migrate:participation`, `db:seed`, `db:seed-large` (1000 predictions + 8 groups), `db:score` / `db:score:dev` / `db:score:prod` (batch recompute `predictions.score` from `shared/scoring.ts`; prod needs `-- --confirm-prod`; optional `--dry-run`).
 
 ### Tables
 
@@ -193,6 +193,8 @@ worker/src/
     ├── seed-large.sql           # 1000 predictions + 8 groups
     └── group-names.json         # ~50 fun Hungarian names for groups
 ```
+
+`worker/scripts/recalculate-scores.ts` — batch (re)score finalized rows in D1 (`npm run db:score*`).
 
 ## Draft and Finalize Model
 
@@ -345,6 +347,8 @@ Five components (0-100 scale, **v2**):
 - Participation rate (10 pts) — absolute error, 20pp cap. Default: 70%.
 
 Score computation runs as a batch after the election against the real results. `REFERENCE_RESULT` in `shared/types.ts` holds placeholder results for development. `RESULTS_AVAILABLE` and `VOTE_PROCESSING_PCT` are the two constants to update on election night.
+
+To (re)write scores in D1 after updating `REFERENCE_RESULT`, run `npm run db:score -w worker` (local), `npm run db:score:dev -w worker` (remote `mandato-dev`), or `npm run db:score:prod -w worker -- --confirm-prod` (remote `mandato-prod`). Add `--dry-run` after `--` to preview without updating. Implementation: `worker/scripts/recalculate-scores.ts` (formula in `shared/scoring.ts`, shared with the leaderboard breakdown UI).
 
 ## Shared Constants (`shared/types.ts`)
 

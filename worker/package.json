@@ -23,7 +23,10 @@
     "db:init:prod": "wrangler d1 execute mandato-prod --remote --file=src/db/schema-init.sql",
     "db:reset:prod": "wrangler d1 execute mandato-prod --remote --file=src/db/schema-reset.sql",
     "db:seed:prod": "wrangler d1 execute mandato-prod --remote --file=src/db/seed.sql",
-    "db:seed-large:prod": "wrangler d1 execute mandato-prod --remote --file=src/db/seed-large.sql"
+    "db:seed-large:prod": "wrangler d1 execute mandato-prod --remote --file=src/db/seed-large.sql",
+    "db:score": "tsx scripts/recalculate-scores.ts local",
+    "db:score:dev": "tsx scripts/recalculate-scores.ts dev",
+    "db:score:prod": "tsx scripts/recalculate-scores.ts prod"
   },
   "dependencies": {
     "@mandatoto/shared": "*",
@@ -31,10 +34,12 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250327.0",
+    "@types/node": "^24.12.0",
     "@eslint/js": "^10.0.1",
     "eslint": "^10.2.0",
     "globals": "^17.4.0",
     "typescript": "~5.9.3",
+    "tsx": "^4.21.0",
     "typescript-eslint": "^8.58.0",
     "wrangler": "^4.16.0"
   }
