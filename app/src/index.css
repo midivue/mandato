@@ -1,0 +1,28 @@
+@import '@fontsource-variable/inter';
+@import '@fontsource/sora/600.css';
+@import '@fontsource/sora/700.css';
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Inter Variable', Inter, 'Segoe UI', sans-serif;
+}
+
+:root {
+  font-family: var(--font-sans);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scrollbar-gutter: stable;
+}
+
+body {
+  margin: 0;
+}
+
+.font-logo {
+  font-family: 'Sora', 'Inter Variable', Inter, sans-serif;
+}

@@ -1,0 +1,16 @@
+changelog:
+  categories:
+    - title: "New Features"
+      labels:
+        - feature
+        - enhancement
+    - title: "Bug Fixes"
+      labels:
+        - bug
+        - fix
+    - title: "Performance"
+      labels:
+        - performance
+    - title: "Other Changes"
+      labels:
+        - "*"

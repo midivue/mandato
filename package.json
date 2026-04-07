@@ -1,0 +1,13 @@
+{
+  "name": "mandatoto",
+  "private": true,
+  "workspaces": ["app", "worker", "shared"],
+  "scripts": {
+    "dev": "concurrently --names api,app --prefix-colors blue,green \"npm run dev -w worker\" \"npm run dev -w app\"",
+    "build": "npm run build -w app && npx tsc -p worker --noEmit",
+    "lint": "npm run lint -w app && npm run lint -w worker"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

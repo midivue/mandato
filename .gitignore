@@ -1,0 +1,25 @@
+node_modules
+dist
+dist-ssr
+*.local
+*.log
+
+# Environment variables
+.env
+.env.*
+!.env.example
+.cursor
+
+# Wrangler local state
+.wrangler
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

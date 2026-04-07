@@ -1,0 +1,41 @@
+{
+  "name": "@mandatoto/worker",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:init": "wrangler d1 execute mandato-local --local --file=src/db/schema-init.sql",
+    "db:reset": "wrangler d1 execute mandato-local --local --file=src/db/schema-reset.sql",
+    "db:migrate:indexes": "wrangler d1 execute mandato-local --local --file=src/db/migration-005-indexes.sql",
+    "db:migrate:participation": "wrangler d1 execute mandato-local --local --file=src/db/migration-006-participation-rate.sql",
+    "db:seed": "wrangler d1 execute mandato-local --local --file=src/db/seed.sql",
+    "db:seed-large": "wrangler d1 execute mandato-local --local --file=src/db/seed-large.sql",
+    "db:generate-seed": "node src/db/generate-seed.mjs",
+    "lint": "eslint .",
+    "deploy:dev": "wrangler deploy --env dev",
+    "db:init:dev": "wrangler d1 execute mandato-dev --remote --file=src/db/schema-init.sql",
+    "db:reset:dev": "wrangler d1 execute mandato-dev --remote --file=src/db/schema-reset.sql",
+    "db:seed:dev": "wrangler d1 execute mandato-dev --remote --file=src/db/seed.sql",
+    "db:seed-large:dev": "wrangler d1 execute mandato-dev --remote --file=src/db/seed-large.sql",
+    "deploy:prod": "wrangler deploy --env production",
+    "db:init:prod": "wrangler d1 execute mandato-prod --remote --file=src/db/schema-init.sql",
+    "db:reset:prod": "wrangler d1 execute mandato-prod --remote --file=src/db/schema-reset.sql",
+    "db:seed:prod": "wrangler d1 execute mandato-prod --remote --file=src/db/seed.sql",
+    "db:seed-large:prod": "wrangler d1 execute mandato-prod --remote --file=src/db/seed-large.sql"
+  },
+  "dependencies": {
+    "@mandatoto/shared": "*",
+    "hono": "^4.7.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250327.0",
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.2.0",
+    "globals": "^17.4.0",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.58.0",
+    "wrangler": "^4.16.0"
+  }
+}
