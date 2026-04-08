@@ -113,7 +113,7 @@ export function computeVoterCount(participationRate: string): number | null {
 export function computeVoteCount(pct: string, participationRate: string): number | null {
   const p = Number(pct)
   const r = Number(participationRate)
-  if (!Number.isFinite(p) || p <= 0 || !Number.isFinite(r) || r <= 0) return null
+  if (!Number.isFinite(p) || p < 0 || !Number.isFinite(r) || r <= 0) return null
   return Math.round(TOTAL_ELIGIBLE_VOTERS * r / 100 * p / 100)
 }
 

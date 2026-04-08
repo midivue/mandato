@@ -198,23 +198,19 @@ export function PartyGrid({ draft, canEdit, updateDraft, updatePercent }: PartyG
                         className={`w-full rounded-md border p-1.5 text-center transition md:p-2 ${borderClass} ${belowThreshold ? 'cursor-not-allowed' : ''}`}
                       >
                         <div className="space-y-1.5 md:space-y-2">
-                          <div className="relative w-full overflow-hidden rounded">
+                          <div className="relative overflow-hidden rounded">
                             <img
                               src={pmOption.portraitSrc}
                               alt={pmOption.candidateName}
-                              className={`h-[11.7rem] w-full object-cover object-[center_22%] transition-all duration-300 md:h-52 ${imgClass}`}
+                              className={`aspect-auto h-48 w-full object-cover object-[center_22%] transition-all duration-300 md:h-52 ${imgClass}`}
                             />
                             {belowThreshold && (
-                              <div
-                                className="pointer-events-none absolute inset-0 flex items-center justify-center bg-white/50"
+                              <img
+                                src={pmXSvg}
+                                alt=""
                                 aria-hidden
-                              >
-                                <img
-                                  src={pmXSvg}
-                                  alt=""
-                                  className="h-[45%] w-auto max-h-[6rem] object-contain"
-                                />
-                              </div>
+                                className="pointer-events-none absolute inset-0 h-full w-full object-fill"
+                              />
                             )}
                           </div>
                           <p className={`truncate text-xs font-semibold transition-colors duration-300 ${
