@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { AlertTriangle, CheckCircle2, ExternalLink, Eye, EyeOff, Loader2, Lock, Save } from 'lucide-react'
+import { AlertTriangle, CheckCircle2, ExternalLink, Lock, Save } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { isLocalDraft } from '@/hooks/use-prediction'
 import type { VotingDraft } from '@/hooks/use-prediction'
@@ -11,22 +11,20 @@ const CUTOFF_DATE = new Date(CUTOFF_AT)
 type ActionBarProps = {
   draft: VotingDraft
   canEdit: boolean
-  saving: boolean
   isFinalized: boolean
   showFinalizedBadge: boolean
   finalizeReady: boolean
   lastSavedAt: Date | null
   finalizeError: string | null
   showSaveReminder: boolean
-  updateDraft: (updater: (prev: VotingDraft) => VotingDraft) => void
   saveDraft: () => void
   onShowFinalize: () => void
 }
 
 export function ActionBar({
-  draft, canEdit, saving, isFinalized, showFinalizedBadge,
+  draft, canEdit, isFinalized, showFinalizedBadge,
   finalizeReady, lastSavedAt, finalizeError, showSaveReminder,
-  updateDraft, saveDraft, onShowFinalize,
+  saveDraft, onShowFinalize,
 }: ActionBarProps) {
   const { t } = useTranslation()
 
@@ -42,39 +40,12 @@ export function ActionBar({
       {/* Mobile: full-width column stack. Desktop: flex-row layout */}
       <div className="flex flex-col gap-2 md:flex-row md:flex-wrap md:items-center md:justify-between">
 
-        {/* Left group: save + visibility toggle */}
+        {/* Left group: save */}
         <div className="flex flex-col gap-2 md:flex-row md:flex-wrap md:items-center">
-          <Button variant="outline" className="w-full md:w-auto" onClick={saveDraft} disabled={!canEdit || saving}>
-            {saving
-              ? <Loader2 className="size-4 animate-spin" aria-hidden />
-              : <Save className="size-4" aria-hidden />
-            }
+          <Button variant="outline" className="w-full md:w-auto" onClick={saveDraft} disabled={!canEdit}>
+            <Save className="size-4" aria-hidden />
             {t('flow.saveDraft')}
           </Button>
-
-          {/* 50/50 visibility switcher */}
-          <div className="grid grid-cols-2 gap-2 md:flex md:gap-2">
-            <Button
-              variant={draft.visibility === 'public' ? 'default' : 'outline'}
-              disabled={!canEdit}
-              onClick={() => updateDraft((prev) => ({ ...prev, visibility: 'public' }))}
-            >
-              <Eye className="size-4" aria-hidden />
-              {t('flow.visibilityPublic')}
-            </Button>
-            <Button
-              variant={draft.visibility === 'private' ? 'default' : 'outline'}
-              disabled={!canEdit}
-              onClick={() => updateDraft((prev) => ({ ...prev, visibility: 'private' }))}
-            >
-              <EyeOff className="size-4" aria-hidden />
-              {t('flow.visibilityPrivate')}
-            </Button>
-          </div>
-
-          {saving && (
-            <span className="text-xs text-zinc-400">{t('flow.saving')}</span>
-          )}
         </div>
 
         {/* Right group: view tip + finalize */}

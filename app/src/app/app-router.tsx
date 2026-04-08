@@ -30,7 +30,7 @@ type AppRouterProps = {
 
 export function AppRouter({ page, prediction }: AppRouterProps) {
   const {
-    draft, loading, saving, error, finalizeError, canEdit, finalizeReady,
+    draft, loading, error, finalizeError, canEdit, finalizeReady,
     isFinalized, showFinalizedBadge, isDirty, lastSavedAt, showSaveReminder,
     percentTotal, updateDraft, updatePercent, resetBallot, saveDraft, finalize,
     restoreSession, deletePrediction, leaveSession,
@@ -76,7 +76,6 @@ export function AppRouter({ page, prediction }: AppRouterProps) {
   return (
     <BallotPage
       draft={draft}
-      saving={saving}
       finalizeError={finalizeError}
       canEdit={canEdit}
       finalizeReady={finalizeReady}

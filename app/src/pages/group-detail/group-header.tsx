@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Check, Copy, Eye, EyeOff, Link2, LogOut, Pencil } from 'lucide-react'
+import { Check, Copy, Link2, LogOut, Pencil } from 'lucide-react'
 import * as api from '@/lib/api-client'
 import { Button } from '@/components/ui/button'
 import type { GroupDetail } from '@mandatoto/shared/types'
@@ -23,8 +23,6 @@ export function GroupHeader({ group, groupToken, isMember, userToken, onGroupUpd
 
   const [copied, setCopied] = useState(false)
   const [inviteCopied, setInviteCopied] = useState(false)
-  const [visibilityLoading, setVisibilityLoading] = useState(false)
-
   function copyLink() {
     const url = `${window.location.origin}${window.location.pathname}#csoport/${groupToken}`
     navigator.clipboard.writeText(url).then(() => {
@@ -39,18 +37,6 @@ export function GroupHeader({ group, groupToken, isMember, userToken, onGroupUpd
       setInviteCopied(true)
       setTimeout(() => setInviteCopied(false), 2000)
     })
-  }
-
-  async function toggleVisibility() {
-    if (!userToken || !group) return
-    const next = group.visibility === 'public' ? 'private' : 'public'
-    setVisibilityLoading(true)
-    try {
-      const data = await api.updateGroup(groupToken, userToken, { visibility: next })
-      onGroupUpdate(data)
-    } catch { /* silent */ } finally {
-      setVisibilityLoading(false)
-    }
   }
 
   function startEditName() {
@@ -102,29 +88,6 @@ export function GroupHeader({ group, groupToken, isMember, userToken, onGroupUpd
         <span className="inline-block rounded-full border border-zinc-200 bg-zinc-50 px-2 py-0.5 text-[11px] font-medium text-zinc-600">
           {t('groups.detail.members')}: {group.members.length}
         </span>
-        {isMember ? (
-          <button
-            onClick={() => void toggleVisibility()}
-            disabled={visibilityLoading}
-            className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-medium transition ${
-              group.visibility === 'public'
-                ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
-                : 'border-zinc-200 bg-zinc-50 text-zinc-600'
-            }`}
-          >
-            {group.visibility === 'public' ? <Eye className="size-3" /> : <EyeOff className="size-3" />}
-            {group.visibility === 'public' ? t('groups.detail.visibilityPublic') : t('groups.detail.visibilityPrivate')}
-          </button>
-        ) : (
-          <span className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-medium ${
-            group.visibility === 'public'
-              ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
-              : 'border-zinc-200 bg-zinc-50 text-zinc-600'
-          }`}>
-            {group.visibility === 'public' ? <Eye className="size-3" /> : <EyeOff className="size-3" />}
-            {group.visibility === 'public' ? t('groups.detail.visibilityPublic') : t('groups.detail.visibilityPrivate')}
-          </span>
-        )}
       </div>
       <div className="flex flex-wrap items-center gap-2">
         <Button variant="outline" size="sm" onClick={copyLink}>

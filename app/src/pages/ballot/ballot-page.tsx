@@ -25,7 +25,6 @@ import { LocationSection } from './location-section'
 
 export type BallotPageProps = {
   draft: VotingDraft
-  saving: boolean
   finalizeError: string | null
   canEdit: boolean
   finalizeReady: boolean
@@ -46,7 +45,7 @@ export type BallotPageProps = {
 }
 
 export function BallotPage({
-  draft, saving, finalizeError, canEdit, finalizeReady,
+  draft, finalizeError, canEdit, finalizeReady,
   isFinalized, showFinalizedBadge, isDirty, lastSavedAt, showSaveReminder,
   percentTotal, updateDraft, updatePercent, resetBallot, saveDraft, finalize,
   restoreSession, deletePrediction, leaveSession,
@@ -183,14 +182,12 @@ export function BallotPage({
             <ActionBar
               draft={draft}
               canEdit={canEdit}
-              saving={saving}
               isFinalized={isFinalized}
               showFinalizedBadge={showFinalizedBadge}
               finalizeReady={finalizeReady}
               lastSavedAt={lastSavedAt}
               finalizeError={finalizeError}
               showSaveReminder={showSaveReminder}
-              updateDraft={updateDraft}
               saveDraft={saveDraft}
               onShowFinalize={() => setShowFinalize(true)}
             />
@@ -201,7 +198,7 @@ export function BallotPage({
       <RestoreSessionModal open={showRestore} onClose={() => setShowRestore(false)} onRestore={restoreSession} />
       <DeleteModal open={showDelete} onClose={() => setShowDelete(false)} onDelete={deletePrediction} />
       <LeaveSessionModal open={showLeaveSession} onClose={() => setShowLeaveSession(false)} draft={draft} onLeave={leaveSession} />
-      <FinalizeModal open={showFinalize} onClose={() => setShowFinalize(false)} draft={draft} updateDraft={updateDraft} finalize={finalize} finalizeError={finalizeError} />
+      <FinalizeModal open={showFinalize} onClose={() => setShowFinalize(false)} draft={draft} finalize={finalize} finalizeError={finalizeError} />
     </section>
   )
 }

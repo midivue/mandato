@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Check, Copy, Eye, EyeOff, KeyRound, Loader2, MapPin, Trophy, User, Users } from 'lucide-react'
+import { Check, Copy, KeyRound, Loader2, MapPin, Trophy, User, Users } from 'lucide-react'
 import { useApiQuery } from '@/hooks/use-api-query'
 import { getSharedPrediction } from '@/lib/api-client'
 import { formatDateTimeBudapest } from '@/lib/date-format'
@@ -69,17 +69,6 @@ export function ProfilePage({ shareToken, restoreSession }: ProfilePageProps) {
         <PageHeader icon={<User className="size-5 text-zinc-500" />} title={prediction.displayName}>
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div className="flex flex-wrap items-center gap-2">
-              <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium ${
-                prediction.visibility === 'public'
-                  ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                  : 'bg-amber-50 text-amber-700 border border-amber-200'
-              }`}>
-                {prediction.visibility === 'public'
-                  ? <Eye className="size-3" />
-                  : <EyeOff className="size-3" />
-                }
-                {t(`profile.visibility.${prediction.visibility}`)}
-              </span>
               {prediction.score !== null && (
                 <span className="inline-block rounded-full border border-zinc-200 bg-zinc-50 px-2 py-0.5 text-[11px] font-semibold text-zinc-700">
                   {t('profile.score')}: {prediction.score.toFixed(1)}

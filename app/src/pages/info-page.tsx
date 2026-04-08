@@ -84,7 +84,6 @@ const TOKEN_ITEMS = [
 
 const LEADERBOARD_ITEMS = [
   { key: 'leaderboardRanking' },
-  { key: 'leaderboardVisibility' },
   { key: 'leaderboardBestGroups' },
   { key: 'leaderboardProfile' },
   { key: 'leaderboardPhases' },
@@ -94,12 +93,11 @@ const PRIVACY_ITEMS = [
   { key: 'privacyNoReg', icon: '01' },
   { key: 'privacyNoCookies', icon: '02' },
   { key: 'privacyMinData', icon: '03' },
-  { key: 'privacyControl', icon: '04' },
-  { key: 'privacyOpenSource', icon: '05' },
+  { key: 'privacyOpenSource', icon: '04' },
 ] as const
 
 const FAQ_KEYS = [
-  'faq1', 'faq2', 'faq3', 'faq4', 'faq5', 'faq6', 'faq7', 'faq8', 'faq9', 'faq10',
+  'faq1', 'faq2', 'faq3', 'faq4', 'faq5', 'faq6', 'faq8', 'faq9', 'faq10',
 ] as const
 
 export function InfoPage() {
