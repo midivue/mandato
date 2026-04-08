@@ -29,7 +29,7 @@ export function SessionPanel({
   const { t } = useTranslation()
   const [tokenCopied, setTokenCopied] = useState(false)
   const [shareCopied, setShareCopied] = useState(false)
-  const [sessionOpen, setSessionOpen] = useState(false)
+  const [sessionOpen, setSessionOpen] = useState(true)
 
   function copyToken() {
     navigator.clipboard.writeText(draft.token).then(() => {
