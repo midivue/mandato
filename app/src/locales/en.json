@@ -321,7 +321,7 @@
     "faq3q": "Can I edit my tip after finalizing?",
     "faq3a": "Yes. You can edit and re-finalize your tip as many times as you want until the cutoff (April 12, 2026 06:00 CEST).",
     "faq4q": "How does scoring work?",
-    "faq4a": "Your tip is scored on three components: correct party list winner (20 pts), percentage accuracy (60 pts), and correct prime minister (20 pts). See the Scoring section above for details.",
+    "faq4a": "Your tip is scored on five components (100 points total): party percentage accuracy (70 pts), correct prime minister (10 pts), participation rate accuracy (10 pts), correct party list winner (5 pts), and nationalities list accuracy (5 pts). See the Scoring section above for full details.",
     "faq5q": "How do percentages work?",
     "faq5a": "All 6 percentage fields (5 parties + nationalities list) are required and must add up to exactly 100%. When you enter a value, the remaining percentage is automatically distributed across unfilled fields.",
     "faq6q": "Why is a PM candidate greyed out?",
