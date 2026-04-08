@@ -321,7 +321,7 @@
     "faq3q": "Módosíthatom a tippemet véglegesítés után?",
     "faq3a": "Igen, a határidőig (2026. április 12. 06:00, Budapest GMT+2) bármikor módosíthatod és újra véglegesítheted a tipped.",
     "faq4q": "Hogyan működik a pontozás?",
-    "faq4a": "A tipped három összetevő alapján kap pontot: a pártlista győztes eltalálása (20 pont), a százalékok pontossága (60 pont), és a miniszterelnök eltalálása (20 pont). A részletes leírás fent, a Pontrendszer szekcióban olvasható.",
+    "faq4a": "A tipped öt összetevő alapján kap pontot (összesen 100 pont): pártlisták százalékos pontossága (70 pt), miniszterelnök eltalálása (10 pt), részvételi arány pontossága (10 pt), pártlista győztes (5 pt) és nemzetiségi lista pontossága (5 pt). A részletes leírás fent, a Pontrendszer szekcióban olvasható.",
     "faq5q": "Hogyan működnek a százalékok?",
     "faq5a": "Mind a 6 százalékos mező (5 párt + nemzetiségi lista) kötelező, és összesen pontosan 100%-ot kell kiadniuk. Ha megadsz egy értéket, a maradék automatikusan elosztódik a még ki nem töltött mezők között.",
     "faq6q": "Miért szürkül el egy miniszterelnök-jelölt?",

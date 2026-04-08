@@ -99,8 +99,7 @@ const PRIVACY_ITEMS = [
 ] as const
 
 const FAQ_KEYS = [
-  'faq1', 'faq2', 'faq3', 'faq4', 'faq5', 'faq6', 'faq7', 'faq8', 'faq9',
-  'faq10', 'faq11', 'faq12', 'faq13', 'faq14', 'faq15', 'faq16', 'faq17', 'faq18',
+  'faq1', 'faq2', 'faq3', 'faq4', 'faq5', 'faq6', 'faq7', 'faq8', 'faq9', 'faq10',
 ] as const
 
 export function InfoPage() {
@@ -162,11 +161,13 @@ export function InfoPage() {
               <h3 className="text-sm font-semibold text-zinc-900">{t('info.scoringTitle')}</h3>
             </div>
             <p className="mb-4 text-sm leading-relaxed text-zinc-600"><T i18nKey="info.scoringIntro" /></p>
-            <div className="grid gap-3 md:grid-cols-3">
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {([
-                { key: 'scoringListWinner', pts: 20, color: 'bg-zinc-900' },
-                { key: 'scoringPct', pts: 60, color: 'bg-zinc-700' },
-                { key: 'scoringPm', pts: 20, color: 'bg-zinc-500' },
+                { key: 'scoringPct', pts: 70, color: 'bg-zinc-900' },
+                { key: 'scoringPm', pts: 10, color: 'bg-zinc-700' },
+                { key: 'scoringAttendance', pts: 10, color: 'bg-zinc-600' },
+                { key: 'scoringListWinner', pts: 5, color: 'bg-zinc-500' },
+                { key: 'scoringNationalities', pts: 5, color: 'bg-zinc-400' },
               ] as const).map(({ key, pts, color }) => (
                 <div key={key} className="rounded-lg border border-zinc-200 bg-zinc-50/50 p-4">
                   <div className="mb-2 flex items-center gap-2">
