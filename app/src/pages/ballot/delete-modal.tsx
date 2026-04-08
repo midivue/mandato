@@ -31,7 +31,6 @@ export function DeleteModal({ open, onClose, onDelete }: DeleteModalProps) {
     <Modal open={open} onClose={onClose}>
       <ModalHeader title={t('flow.deleteTitle')} onClose={onClose} className="text-red-600" />
       <p className="mt-3 text-xs leading-relaxed text-zinc-700"><T i18nKey="flow.deleteWarning" /></p>
-      <p className="mt-2 text-xs leading-relaxed text-zinc-500"><T i18nKey="flow.deletePrivacyHint" /></p>
       <div className="mt-5 flex justify-end gap-2">
         <Button variant="outline" size="sm" onClick={onClose}>
           {t('flow.deleteCancel')}

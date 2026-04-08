@@ -6,8 +6,6 @@ import {
   CheckCircle2,
   Copy,
   Download,
-  Eye,
-  EyeOff,
   ExternalLink,
   Link2,
   Loader2,
@@ -23,7 +21,6 @@ type FinalizeModalProps = {
   open: boolean
   onClose: () => void
   draft: VotingDraft
-  updateDraft: (updater: (prev: VotingDraft) => VotingDraft) => void
   finalize: (t: (key: string) => string, turnstileToken?: string) => Promise<string | undefined>
   finalizeError?: string | null
 }
@@ -31,7 +28,7 @@ type FinalizeModalProps = {
 // 'confirming' = awaiting Turnstile token (button shows spinner, modal not yet in full loading state)
 type Phase = 'confirm' | 'confirming' | 'loading' | 'success'
 
-export function FinalizeModal({ open, onClose, draft, updateDraft, finalize, finalizeError }: FinalizeModalProps) {
+export function FinalizeModal({ open, onClose, draft, finalize, finalizeError }: FinalizeModalProps) {
   const { t } = useTranslation()
   const [phase, setPhase] = useState<Phase>('confirm')
   const [shareToken, setShareToken] = useState<string | null>(null)
@@ -128,30 +125,6 @@ export function FinalizeModal({ open, onClose, draft, updateDraft, finalize, fin
             <p className="text-xs leading-relaxed text-blue-800">
               <T i18nKey="flow.finalizeTokenNotice" />
             </p>
-          </div>
-
-          <div className="mt-4">
-            <p className="mb-2 text-xs font-semibold text-zinc-700">
-              {t('flow.finalizeVisibilityLabel')}
-            </p>
-            <div className="grid grid-cols-2 gap-2 sm:flex sm:gap-2">
-              <Button
-                variant={draft.visibility === 'public' ? 'default' : 'outline'}
-                disabled={phase === 'confirming'}
-                onClick={() => updateDraft((prev) => ({ ...prev, visibility: 'public' }))}
-              >
-                <Eye className="size-4" aria-hidden />
-                {t('flow.visibilityPublic')}
-              </Button>
-              <Button
-                variant={draft.visibility === 'private' ? 'default' : 'outline'}
-                disabled={phase === 'confirming'}
-                onClick={() => updateDraft((prev) => ({ ...prev, visibility: 'private' }))}
-              >
-                <EyeOff className="size-4" aria-hidden />
-                {t('flow.visibilityPrivate')}
-              </Button>
-            </div>
           </div>
 
           {/* Error feedback from a previous failed attempt */}

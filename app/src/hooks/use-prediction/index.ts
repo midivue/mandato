@@ -16,7 +16,6 @@ const CUTOFF_MS = new Date(CUTOFF_AT).getTime()
 export function usePrediction() {
   const { draft, setDraft, loading, error, setError, lockedPercentsRef } = usePredictionInit()
 
-  const [saving] = useState(false)
   const [nowTs, setNowTs] = useState(() => Date.now())
 
   useEffect(() => {
@@ -88,7 +87,6 @@ export function usePrediction() {
   return {
     draft,
     loading,
-    saving,
     error,
     finalizeError,
     canEdit,
