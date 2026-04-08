@@ -119,3 +119,28 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+  sync-dev:
+    name: Sync dev onto main after release
+    needs: deploy-prod
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Rebase dev onto main and force-push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git checkout dev
+          git rebase origin/main
+
+          # Only commits genuinely new to dev will remain after rebase.
+          # The rebased dev is then force-pushed so the next PR is clean.
+          git push --force-with-lease origin dev
+          echo "dev synced to $(git rev-parse --short HEAD)"
