@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Loader2, Plus, Trophy, Users, ExternalLink, ArrowRight } from 'lucide-react'
+import { Loader2, Plus, Trophy, Users, ExternalLink, ArrowRight, Info } from 'lucide-react'
 import * as api from '@/lib/api-client'
 import { useApiQuery } from '@/hooks/use-api-query'
 import { useTurnstile } from '@/hooks/use-turnstile'
@@ -47,7 +47,7 @@ export function GroupsPage({ userToken }: GroupsPageProps) {
     return () => window.removeEventListener('storage', handler)
   }, [])
 
-  const hasPrediction = userToken !== null
+  const hasPrediction = !!userToken
 
   async function handleCreate() {
     if (!userToken) return
@@ -108,45 +108,48 @@ export function GroupsPage({ userToken }: GroupsPageProps) {
               {t('groups.createTitle')}
             </h3>
 
-            {hasPrediction ? (
-              <div className="space-y-3">
-                <div>
-                  <label className="mb-1 block text-[11px] font-medium uppercase tracking-wide text-zinc-500">
-                    {t('groups.createNameLabel')}
-                  </label>
-                  <input
-                    type="text"
-                    value={groupName}
-                    onChange={(e) => setGroupName(e.target.value)}
-                    onKeyDown={(e) => { if (e.key === 'Enter') void handleCreate() }}
-                    placeholder={t('groups.createNamePlaceholder')}
-                    className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm outline-none focus:border-zinc-500"
-                    maxLength={60}
-                  />
+            <div className="space-y-3">
+              <div>
+                <label className="mb-1 block text-[11px] font-medium uppercase tracking-wide text-zinc-500">
+                  {t('groups.createNameLabel')}
+                </label>
+                <input
+                  type="text"
+                  value={groupName}
+                  onChange={(e) => setGroupName(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' && hasPrediction) void handleCreate() }}
+                  placeholder={t('groups.createNamePlaceholder')}
+                  disabled={!hasPrediction}
+                  className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm outline-none focus:border-zinc-500 disabled:cursor-not-allowed disabled:bg-zinc-100 disabled:text-zinc-400"
+                  maxLength={60}
+                />
+              </div>
+              {createError && (
+                <p className="text-xs font-medium text-red-600">{createError}</p>
+              )}
+              <Button onClick={() => void handleCreate()} disabled={creating || !hasPrediction} className="w-full">
+                <Plus className="size-4" />
+                {t('groups.createButton')}
+              </Button>
+              {!hasPrediction && (
+                <div className="flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2.5">
+                  <Info className="mt-0.5 size-3.5 shrink-0 text-amber-500" />
+                  <div className="space-y-1">
+                    <p className="text-xs text-amber-800">
+                      {t('groups.createRequiresPrediction')}
+                    </p>
+                    <a
+                      href="#jatek"
+                      className="inline-flex items-center gap-1 text-xs font-medium text-amber-900 underline underline-offset-2 hover:text-amber-950"
+                    >
+                      {t('groups.createRequiresPredictionLink')}
+                      <ArrowRight className="size-3" />
+                    </a>
+                  </div>
                 </div>
-                {createError && (
-                  <p className="text-xs font-medium text-red-600">{createError}</p>
-                )}
-                <Button onClick={() => void handleCreate()} disabled={creating} className="w-full">
-                  <Plus className="size-4" />
-                  {t('groups.createButton')}
-                </Button>
-                <div ref={turnstileRef} />
-              </div>
-            ) : (
-              <div className="space-y-2">
-                <p className="text-xs text-zinc-500">
-                  {t('groups.createRequiresPrediction')}
-                </p>
-                <a
-                  href="#jatek"
-                  className="inline-flex items-center gap-1 text-xs font-medium text-zinc-700 underline underline-offset-2 hover:text-zinc-950"
-                >
-                  {t('groups.createRequiresPredictionLink')}
-                  <ArrowRight className="size-3" />
-                </a>
-              </div>
-            )}
+              )}
+              <div ref={turnstileRef} />
+            </div>
           </div>
 
           {/* Top groups */}
