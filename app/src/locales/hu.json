@@ -528,6 +528,11 @@
       "needsPrediction": "A csoportok kezeléséhez szükséges egy aktív tipp."
     }
   },
+  "banner": {
+    "text": "Új funkció: add hozzá a Telex mandátum tipped is a profilodhoz a leadási határidő előtt!",
+    "cta": "Kitöltöm",
+    "dismiss": "Értesítés bezárása"
+  },
   "telex": {
     "title": "Telex mandátum tipp",
     "description": "Tippeld meg a mandátumok eloszlását a Telex Tippjáték oldalán, majd illeszd be az eredmény linkedet!",

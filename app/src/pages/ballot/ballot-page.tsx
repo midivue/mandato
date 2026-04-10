@@ -155,6 +155,8 @@ export function BallotPage({
           </div>
 
           <div id="ballot-session" className="space-y-4 border-t border-zinc-200 pt-6">
+            <TelexMandateSection key={draft.token} draft={draft} canEdit={canEdit} updateDraft={updateDraft} />
+
             <SessionPanel
               draft={draft}
               canEdit={canEdit}
@@ -172,8 +174,6 @@ export function BallotPage({
               <LocationSection key={draft.token} draft={draft} canEdit={canEdit} updateDraft={updateDraft} />
               <BallotStatsPreview />
             </div>
-
-            <TelexMandateSection key={draft.token} draft={draft} canEdit={canEdit} updateDraft={updateDraft} />
 
             <GuideSection />
 
