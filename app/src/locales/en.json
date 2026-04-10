@@ -528,6 +528,11 @@
       "needsPrediction": "An active prediction is required to manage groups."
     }
   },
+  "banner": {
+    "text": "New feature: attach your Telex mandate tip to your profile before the submission deadline!",
+    "cta": "Add it now",
+    "dismiss": "Dismiss notification"
+  },
   "telex": {
     "title": "Telex mandate tip",
     "description": "Predict the seat distribution on the Telex Tippjáték page, then paste your result link here!",

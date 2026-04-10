@@ -8,6 +8,7 @@ const KEYS = {
   groups: 'mandatoto:v1:groups',
   pendingJoin: 'mandatoto:v1:pending-join',
   legacyDraft: 'mandatoto:v1:draft',
+  dismissedBanners: 'mandatoto:v1:dismissed-banners',
 } as const
 
 export const STORAGE_KEYS = KEYS
@@ -70,6 +71,12 @@ export const storage = {
 
   getLegacyDraft: <T>() => getJSON<T>(KEYS.legacyDraft),
   removeLegacyDraft: () => remove(KEYS.legacyDraft),
+
+  getDismissedBanners: (): string[] => getJSON<string[]>(KEYS.dismissedBanners) ?? [],
+  addDismissedBanner: (id: string) => {
+    const current: string[] = getJSON<string[]>(KEYS.dismissedBanners) ?? []
+    if (!current.includes(id)) setJSON(KEYS.dismissedBanners, [...current, id])
+  },
 
   clearAll: () => {
     Object.values(KEYS).forEach(remove)
