@@ -13,18 +13,23 @@ const PNG_HEADERS = {
   'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
 } as const
 
-function r2Key(uuid: string) {
-  return `telex-screenshots/${uuid}.png`
+type Variant = 'desktop' | 'mobile'
+
+function r2Key(uuid: string, variant: Variant) {
+  return variant === 'mobile'
+    ? `telex-screenshots/${uuid}-mobile.png`
+    : `telex-screenshots/${uuid}.png`
 }
 
 app.get('/:uuid', async (c) => {
   const uuid = c.req.param('uuid')
   if (!UUID_RE.test(uuid)) return c.json({ error: 'Invalid ID' }, 400)
 
+  const variant: Variant = c.req.query('variant') === 'mobile' ? 'mobile' : 'desktop'
   const media = c.env.MEDIA
 
   // Serve from R2 if already cached
-  const cached = await media.get(r2Key(uuid))
+  const cached = await media.get(r2Key(uuid, variant))
   if (cached) {
     return new Response(cached.body, { headers: PNG_HEADERS })
   }
@@ -40,8 +45,15 @@ app.get('/:uuid', async (c) => {
     b = await puppeteer.launch(browser)
     const page = await b.newPage()
 
-    // 2× device pixel ratio for a crisp image
-    await page.setViewport({ width: 1280, height: 900, deviceScaleFactor: 2 })
+    if (variant === 'mobile') {
+      // 390×844 = iPhone 14 width, below Tailwind md: breakpoint (768px).
+      // Keep Chrome UA (mobile Safari gets blocked by Telex); responsive layout
+      // is driven by CSS viewport width alone.
+      await page.setViewport({ width: 390, height: 844, deviceScaleFactor: 3 })
+    } else {
+      // 2× device pixel ratio for a crisp desktop image
+      await page.setViewport({ width: 1280, height: 900, deviceScaleFactor: 2 })
+    }
 
     // Block ad/campaign/YouTube domains that inject overlays and popups
     await page.setRequestInterception(true)
@@ -98,32 +110,42 @@ app.get('/:uuid', async (c) => {
       return c.json({ error: 'Hemicycle element not found' }, 502)
     }
 
-    // Tight clip: find rightmost text node edge (excludes full-width SVG containers)
-    const clip = await page.evaluate(
-      `(function(sel){
-        var container = document.querySelector(sel);
-        if (!container) return null;
-        var cr = container.getBoundingClientRect();
-        var maxRight = cr.left;
-        Array.from(container.querySelectorAll('li, span, p, strong, b')).forEach(function(node){
-          var s = window.getComputedStyle(node);
-          if (s.display === 'none' || s.visibility === 'hidden') return;
-          var r = node.getBoundingClientRect();
-          if (r.width > 0 && r.height > 0 && r.right > maxRight) maxRight = r.right;
-        });
-        if (maxRight <= cr.left) maxRight = cr.right;
-        return { x: cr.left, y: cr.top, width: Math.min(maxRight - cr.left + 32, cr.width), height: cr.height };
-      })(${JSON.stringify(HEMICYCLE_SELECTOR)})`,
-    ) as { x: number; y: number; width: number; height: number } | null
+    let screenshot: Buffer | Uint8Array
 
-    const screenshot = clip
-      ? await page.screenshot({ type: 'png', clip })
-      : await el.screenshot({ type: 'png' })
+    if (variant === 'mobile') {
+      // Mobile: container is full-width — screenshot the element directly,
+      // no tight right-edge clip needed.
+      screenshot = await el.screenshot({ type: 'png' })
+    } else {
+      // Desktop: tight clip — find rightmost text node edge to exclude the
+      // wide empty right area that SVG containers span.
+      const clip = await page.evaluate(
+        `(function(sel){
+          var container = document.querySelector(sel);
+          if (!container) return null;
+          var cr = container.getBoundingClientRect();
+          var maxRight = cr.left;
+          Array.from(container.querySelectorAll('li, span, p, strong, b')).forEach(function(node){
+            var s = window.getComputedStyle(node);
+            if (s.display === 'none' || s.visibility === 'hidden') return;
+            var r = node.getBoundingClientRect();
+            if (r.width > 0 && r.height > 0 && r.right > maxRight) maxRight = r.right;
+          });
+          if (maxRight <= cr.left) maxRight = cr.right;
+          return { x: cr.left, y: cr.top, width: Math.min(maxRight - cr.left + 32, cr.width), height: cr.height };
+        })(${JSON.stringify(HEMICYCLE_SELECTOR)})`,
+      ) as { x: number; y: number; width: number; height: number } | null
+
+      screenshot = clip
+        ? await page.screenshot({ type: 'png', clip })
+        : await el.screenshot({ type: 'png' })
+    }
+
     await b.close()
     b = null
 
     // Store in R2 so future requests skip the puppeteer step
-    await media.put(r2Key(uuid), screenshot, {
+    await media.put(r2Key(uuid, variant), screenshot, {
       httpMetadata: { contentType: 'image/png' },
     })
 
@@ -134,6 +156,7 @@ app.get('/:uuid', async (c) => {
       requestId: c.get('requestId'),
       event: 'telex_screenshot_error',
       uuid,
+      variant,
       error: String(err),
     }))
     return c.json({ error: 'Screenshot failed' }, 502)

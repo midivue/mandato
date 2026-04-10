@@ -25,6 +25,7 @@ function TelexEmbed({ telexTipId }: { telexTipId: string }) {
   const { t } = useTranslation()
   const telexUrl = `${TELEX_BASE}${telexTipId}`
   const screenshotUrl = `${API_BASE}/telex-screenshot/${telexTipId}`
+  const screenshotMobileUrl = `${screenshotUrl}?variant=mobile`
   const [imgState, setImgState] = useState<'loading' | 'ok' | 'error'>('loading')
 
   return (
@@ -53,13 +54,17 @@ function TelexEmbed({ telexTipId }: { telexTipId: string }) {
           className="block overflow-hidden rounded-lg border border-zinc-200 transition hover:border-zinc-300"
           title={t('telex.profileTitle')}
         >
-          <img
-            src={screenshotUrl}
-            alt={t('telex.screenshotAlt')}
-            className="w-full"
-            onLoad={() => setImgState('ok')}
-            onError={() => setImgState('error')}
-          />
+          {/* Below md (768px): mobile screenshot; md and above: desktop screenshot */}
+          <picture>
+            <source media="(max-width: 767px)" srcSet={screenshotMobileUrl} />
+            <img
+              src={screenshotUrl}
+              alt={t('telex.screenshotAlt')}
+              className="w-full"
+              onLoad={() => setImgState('ok')}
+              onError={() => setImgState('error')}
+            />
+          </picture>
         </a>
       )}
 

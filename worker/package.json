@@ -30,7 +30,8 @@
     "db:score": "tsx scripts/recalculate-scores.ts local",
     "db:score:dev": "tsx scripts/recalculate-scores.ts dev",
     "db:score:prod": "tsx scripts/recalculate-scores.ts prod",
-    "telex:screenshot": "tsx scripts/test-telex-screenshot.ts"
+    "telex:screenshot": "tsx scripts/test-telex-screenshot.ts",
+    "telex:screenshot:mobile": "tsx scripts/test-telex-screenshot.ts --mobile"
   },
   "dependencies": {
     "@cloudflare/puppeteer": "^1.0.7",
