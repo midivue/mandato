@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { BarChart3, MapPin, Globe, HelpCircle, Map as MapIcon, Users } from 'lucide-react'
+import { BarChart3, ExternalLink, Globe, HelpCircle, Map as MapIcon, MapPin, Users } from 'lucide-react'
 import { getStats } from '@/lib/api-client'
 import { useApiQuery } from '@/hooks/use-api-query'
 
@@ -42,7 +42,7 @@ export function StatsPage() {
         </PageHeader>
         <CardContent className="space-y-6">
           {/* Participation overview */}
-          <div className="grid gap-3 grid-cols-2 md:grid-cols-4">
+          <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 md:grid-cols-5">
             <div className="rounded-lg border border-zinc-200 bg-zinc-50/50 px-3.5 py-2.5">
               <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-zinc-500">
                 {t('stats.totalPredictions')}
@@ -57,6 +57,15 @@ export function StatsPage() {
                 </p>
               </div>
               <p className="text-2xl font-bold tabular-nums text-zinc-900">{gs.totalGroups}</p>
+            </div>
+            <div className="rounded-lg border border-zinc-200 bg-zinc-50/50 px-3.5 py-2.5">
+              <div className="mb-1 flex items-center gap-1.5">
+                <ExternalLink className="size-3 text-zinc-400" />
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-zinc-500">
+                  {t('stats.telexTipCount')}
+                </p>
+              </div>
+              <p className="text-2xl font-bold tabular-nums text-zinc-900">{stats.telexTipCount}</p>
             </div>
             <div className="rounded-lg border border-zinc-200 bg-zinc-50/50 px-3.5 py-2.5">
               <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-zinc-500">
