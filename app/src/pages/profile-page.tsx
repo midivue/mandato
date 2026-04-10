@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Check, Copy, KeyRound, Loader2, MapPin, Trophy, User, Users } from 'lucide-react'
+import { Check, Copy, ExternalLink, KeyRound, Link2, Loader2, MapPin, Trophy, User, Users } from 'lucide-react'
 import { useApiQuery } from '@/hooks/use-api-query'
 import { getSharedPrediction } from '@/lib/api-client'
 import { formatDateTimeBudapest } from '@/lib/date-format'
@@ -15,6 +15,60 @@ import { AttendanceDelta, NationalitiesDelta } from './profile/profile-deltas'
 import { pctDisplay } from './profile/profile-utils'
 import { ProfilePredictionsCompact } from './profile/profile-predictions-compact'
 import { ProfilePredictionsCards } from './profile/profile-predictions-cards'
+
+const TELEX_BASE = 'https://telex.hu/melleklet/valasztas-2026/tippjatek/'
+const API_BASE = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL}/api/v1`
+  : '/api/v1'
+
+function TelexEmbed({ telexTipId }: { telexTipId: string }) {
+  const { t } = useTranslation()
+  const telexUrl = `${TELEX_BASE}${telexTipId}`
+  const screenshotUrl = `${API_BASE}/telex-screenshot/${telexTipId}`
+  const [imgState, setImgState] = useState<'loading' | 'ok' | 'error'>('loading')
+
+  return (
+    <div className="space-y-2">
+      <a
+        href={telexUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group flex items-center justify-between gap-3 rounded-lg border border-zinc-200 bg-zinc-50/60 px-4 py-3.5 transition hover:border-zinc-300 hover:bg-zinc-50"
+      >
+        <div className="flex items-center gap-3 min-w-0">
+          <Link2 className="size-4 shrink-0 text-zinc-400 transition group-hover:text-zinc-600" aria-hidden />
+          <div className="min-w-0">
+            <p className="text-xs font-semibold text-zinc-900">{t('telex.profileTitle')}</p>
+            <p className="mt-0.5 text-[10px] text-zinc-400 truncate">{telexUrl}</p>
+          </div>
+        </div>
+        <ExternalLink className="size-4 shrink-0 text-zinc-400 transition group-hover:text-zinc-700" aria-hidden />
+      </a>
+
+      {imgState !== 'error' && (
+        <a
+          href={telexUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block overflow-hidden rounded-lg border border-zinc-200 transition hover:border-zinc-300"
+          title={t('telex.profileTitle')}
+        >
+          <img
+            src={screenshotUrl}
+            alt={t('telex.screenshotAlt')}
+            className="w-full"
+            onLoad={() => setImgState('ok')}
+            onError={() => setImgState('error')}
+          />
+        </a>
+      )}
+
+      {imgState === 'error' && (
+        <p className="text-[11px] text-zinc-500">{t('telex.embedFallback')}</p>
+      )}
+    </div>
+  )
+}
 
 type ProfilePageProps = {
   shareToken: string
@@ -180,6 +234,10 @@ export function ProfilePage({ shareToken, restoreSession }: ProfilePageProps) {
               </div>
             </div>
           </div>
+
+          {prediction.telexTipId && (
+            <TelexEmbed telexTipId={prediction.telexTipId} />
+          )}
 
           {prediction.groups && prediction.groups.length > 0 && (
             <div className="rounded-lg border border-zinc-200 bg-zinc-50/60 px-4 py-3">

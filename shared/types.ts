@@ -23,6 +23,7 @@ export type Prediction = {
   pctNationalities: number | null
   pmWinnerId: PartyId | null
   participationRate: number | null
+  telexTipId: string | null
   locationCountry: LocationCountry
   locationSettlement: string | null
   locationZip: string | null
@@ -45,6 +46,7 @@ export type PredictionUpdate = {
   pctNationalities?: number | null
   pmWinnerId?: PartyId | null
   participationRate?: number | null
+  telexTipId?: string | null
   locationCountry?: LocationCountry
   locationSettlement?: string | null
   locationZip?: string | null
@@ -63,6 +65,7 @@ export type CreatePredictionRequest = {
   pctNationalities?: number | null
   pmWinnerId?: PartyId | null
   participationRate?: number | null
+  telexTipId?: string | null
   locationCountry?: LocationCountry
   locationSettlement?: string | null
   locationZip?: string | null
@@ -82,6 +85,7 @@ export type SharedPrediction = {
   pctNationalities: number | null
   pmWinnerId: PartyId | null
   participationRate: number | null
+  telexTipId: string | null
   locationCountry: LocationCountry
   locationSettlement: string | null
   locationZip: string | null

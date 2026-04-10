@@ -527,5 +527,18 @@
       "notAMember": "Csak a csoport tagjai kezelhetik a csoportot.",
       "needsPrediction": "A csoportok kezeléséhez szükséges egy aktív tipp."
     }
+  },
+  "telex": {
+    "title": "Telex mandátum tipp",
+    "description": "Tippeld meg a mandátumok eloszlását a Telex Tippjáték oldalán, majd illeszd be az eredmény linkedet!",
+    "inputLabel": "Telex tippjáték link",
+    "inputPlaceholder": "https://telex.hu/melleklet/valasztas-2026/tippjatek/...",
+    "openTelex": "Telex Tippjáték",
+    "invalidUrl": "Érvénytelen link — illeszd be a Telex tippjáték eredmény oldal linkjét.",
+    "saved": "Link mentve",
+    "clear": "Link törlése",
+    "profileTitle": "Telex mandátum tipp",
+    "embedFallback": "A kép nem töltödött be — nézd meg közvetlenül a Telexen.",
+    "screenshotAlt": "Telex mandátum tipp – parlament összetétel előrejelzés"
   }
 }

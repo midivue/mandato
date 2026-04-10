@@ -527,5 +527,18 @@
       "notAMember": "Only group members can manage the group.",
       "needsPrediction": "An active prediction is required to manage groups."
     }
+  },
+  "telex": {
+    "title": "Telex mandate tip",
+    "description": "Predict the seat distribution on the Telex Tippjáték page, then paste your result link here!",
+    "inputLabel": "Telex tippjáték link",
+    "inputPlaceholder": "https://telex.hu/melleklet/valasztas-2026/tippjatek/...",
+    "openTelex": "Telex Tippjáték",
+    "invalidUrl": "Invalid link — paste the URL of your Telex tippjáték result page.",
+    "saved": "Link saved",
+    "clear": "Remove link",
+    "profileTitle": "Telex mandate tip",
+    "embedFallback": "Image failed to load — view it directly on Telex.",
+    "screenshotAlt": "Telex mandate tip – parliament composition forecast"
   }
 }

@@ -24,6 +24,7 @@ export function rowToPrediction(row: Record<string, unknown>): Prediction {
     pctNationalities: (row['pct_nationalities'] as number) ?? null,
     pmWinnerId: (row['pm_winner_id'] as PartyId) ?? null,
     participationRate: (row['participation_rate'] as number) ?? null,
+    telexTipId: (row['telex_tip_id'] as string) ?? null,
     locationCountry: (row['location_country'] as string ?? 'hu') as Prediction['locationCountry'],
     locationSettlement: (row['location_settlement'] as string) ?? null,
     locationZip: (row['location_zip'] as string) ?? null,

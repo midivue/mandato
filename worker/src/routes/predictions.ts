@@ -53,6 +53,9 @@ app.post('/', async (c) => {
   if (typeof body.locationZip === 'string' && body.locationZip.length > 100) {
     return c.json({ error: 'Location zip must be 100 characters or fewer' }, 400)
   }
+  if (typeof body.telexTipId === 'string' && body.telexTipId.length > 50) {
+    return c.json({ error: 'Telex tip ID must be 50 characters or fewer' }, 400)
+  }
 
   const displayName = body.displayName || generateAnonymousName()
 
@@ -70,10 +73,11 @@ app.post('/', async (c) => {
   const locationSettlement = typeof body.locationSettlement === 'string' ? body.locationSettlement : null
   const locationZip = typeof body.locationZip === 'string' ? body.locationZip : null
   const locationPublic = body.locationPublic ? 1 : 0
+  const telexTipId = typeof body.telexTipId === 'string' ? body.telexTipId : null
 
   const insertResult = await c.env.DB.prepare(
-    `INSERT INTO predictions (token, share_token, display_name, visibility, list_winner_id, pct_mkkp, pct_tisza, pct_mi_hazank, pct_dk, pct_fidesz_kdnp, pct_nationalities, participation_rate, pm_winner_id, ip_hash, location_country, location_settlement, location_zip, location_public)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `INSERT INTO predictions (token, share_token, display_name, visibility, list_winner_id, pct_mkkp, pct_tisza, pct_mi_hazank, pct_dk, pct_fidesz_kdnp, pct_nationalities, participation_rate, pm_winner_id, ip_hash, telex_tip_id, location_country, location_settlement, location_zip, location_public)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
      RETURNING *`
   )
     .bind(
@@ -91,6 +95,7 @@ app.post('/', async (c) => {
       participationRate,
       body.pmWinnerId && isValidPartyId(body.pmWinnerId) ? body.pmWinnerId : null,
       ipHash,
+      telexTipId,
       locationCountry,
       locationSettlement,
       locationZip,
@@ -112,7 +117,7 @@ app.get('/:token', async (c) => {
   return c.json(rowToPrediction(row as Record<string, unknown>))
 })
 
-// PUT /predictions/:token — update metadata (post-finalize: display_name, visibility only)
+// PUT /predictions/:token — update prediction fields; after cutoff only display_name, visibility, telex_tip_id
 app.put('/:token', async (c) => {
   const token = c.req.param('token')
   const existing = await c.env.DB.prepare('SELECT * FROM predictions WHERE token = ?').bind(token).first()
@@ -130,11 +135,14 @@ app.put('/:token', async (c) => {
   if (typeof body.locationZip === 'string' && body.locationZip.length > 100) {
     return c.json({ error: 'Location zip must be 100 characters or fewer' }, 400)
   }
+  if (typeof body.telexTipId === 'string' && body.telexTipId.length > 50) {
+    return c.json({ error: 'Telex tip ID must be 50 characters or fewer' }, 400)
+  }
 
   if (!isBeforeCutoff()) {
-    const onlyMetadata = Object.keys(body).every((k) => k === 'displayName' || k === 'visibility')
+    const onlyMetadata = Object.keys(body).every((k) => k === 'displayName' || k === 'visibility' || k === 'telexTipId')
     if (!onlyMetadata) {
-      return c.json({ error: 'Cutoff time has passed — only display name and visibility changes allowed' }, 403)
+      return c.json({ error: 'Cutoff time has passed — only display name, visibility, and Telex tip changes allowed' }, 403)
     }
     if (body.visibility === 'private') {
       return c.json({ error: 'Cannot switch to private after cutoff' }, 403)
@@ -185,6 +193,11 @@ app.put('/:token', async (c) => {
   if (body.participationRate !== undefined) {
     sets.push('participation_rate = ?')
     binds.push(typeof body.participationRate === 'number' && isValidPercent(body.participationRate) ? body.participationRate : null)
+  }
+
+  if (body.telexTipId !== undefined) {
+    sets.push('telex_tip_id = ?')
+    binds.push(typeof body.telexTipId === 'string' ? body.telexTipId : null)
   }
 
   if (body.locationCountry !== undefined) {

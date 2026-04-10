@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS predictions (
   pct_fidesz_kdnp REAL,
   pct_nationalities REAL,
   participation_rate REAL,
+  telex_tip_id    TEXT,
 
   pm_winner_id    TEXT,
 

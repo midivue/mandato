@@ -22,6 +22,7 @@ import { DeleteModal } from './delete-modal'
 import { LeaveSessionModal } from './leave-session-modal'
 import { FinalizeModal } from './finalize-modal'
 import { LocationSection } from './location-section'
+import { TelexMandateSection } from './telex-mandate-section'
 
 export type BallotPageProps = {
   draft: VotingDraft
@@ -171,6 +172,8 @@ export function BallotPage({
               <LocationSection key={draft.token} draft={draft} canEdit={canEdit} updateDraft={updateDraft} />
               <BallotStatsPreview />
             </div>
+
+            <TelexMandateSection key={draft.token} draft={draft} canEdit={canEdit} updateDraft={updateDraft} />
 
             <GuideSection />
 

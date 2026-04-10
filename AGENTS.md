@@ -60,7 +60,8 @@ Vite proxies `/api/*` to the local wrangler server. No Docker needed.
 - `worker/src/db/schema-reset.sql` — Development only (`DROP TABLE` + recreate). Destroys all data.
 - `worker/src/db/migration-005-indexes.sql` — Composite indexes for common query patterns.
 - `worker/src/db/migration-006-participation-rate.sql` — Adds `participation_rate` column to existing databases.
-- npm scripts: `db:init` (safe init), `db:reset` (destructive reset), `db:migrate:indexes`, `db:migrate:participation`, `db:seed`, `db:seed-large` (1000 predictions + 8 groups), `db:score` / `db:score:dev` / `db:score:prod` (batch recompute `predictions.score` from `shared/scoring.ts`; prod needs `-- --confirm-prod`; optional `--dry-run`).
+- `worker/src/db/migration-007-telex-tip.sql` — Adds `telex_tip_id` column to existing databases.
+- npm scripts: `db:init` (safe init), `db:reset` (destructive reset), `db:migrate:indexes`, `db:migrate:participation`, `db:migrate:telex` / `db:migrate:telex:dev` (apply migration-007 locally / on remote dev D1), `db:seed`, `db:seed-large` (1000 predictions + 8 groups), `db:score` / `db:score:dev` / `db:score:prod` (batch recompute `predictions.score` from `shared/scoring.ts`; prod needs `-- --confirm-prod`; optional `--dry-run`).
 
 ### Tables
 
@@ -78,6 +79,7 @@ Vite proxies `/api/*` to the local wrangler server. No Docker needed.
 | `pct_nationalities` | REAL | Predicted combined nationalities list percentage (nullable, 0-100). |
 | `participation_rate` | REAL | Predicted voter turnout percentage (nullable, 0-100). Default tip: 70%. |
 | `pm_winner_id` | TEXT | Predicted PM candidate's party (`PartyId`). |
+| `telex_tip_id` | TEXT | Optional UUID from Telex Tippjáték (mandate prediction game). Stored to display screenshot on profile. |
 | `score` | REAL | Null until scoring runs against `REFERENCE_RESULT`. |
 | Timestamps | TEXT | `created_at`, `updated_at`, `finalized_at`. |
 
@@ -128,6 +130,7 @@ All endpoints under `/api/v1/`. Route files in `worker/src/routes/`.
 | `POST` | `/groups/:groupToken/members` | `X-User-Token` (member) | `groups.ts` |
 | `DELETE` | `/groups/:groupToken/members/:shareToken` | `X-User-Token` (member) | `groups.ts` |
 | `GET` | `/groups/best` | none | `groups.ts` |
+| `GET` | `/telex-screenshot/:uuid` | none | `telex-screenshot.ts` |
 
 ### Server-Side Enforcement
 
@@ -143,7 +146,7 @@ All endpoints under `/api/v1/`. Route files in `worker/src/routes/`.
 2. **Global error handler** — Structured JSON logging with request ID. Returns generic 500.
 3. **CORS** — Restricted to localhost, `*.pages.dev`, `*.workers.dev`, `*.mandato.hu`.
 4. **Security headers** — `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`.
-5. **Rate limiting** — Per-IP (hashed), 60 reads/min, 10 writes/min. Logs 429 events with request ID + IP hash prefix.
+5. **Rate limiting** — Per-IP (hashed), 60 reads/min, 20 writes/min. Logs 429 events with request ID + IP hash prefix.
 6. **Body size cap** — 4KB on non-GET requests.
 7. **Maintenance mode** — If `MAINTENANCE_MODE` env is set, all non-GET/OPTIONS return 503.
 
@@ -158,6 +161,8 @@ Hybrid L1 (in-memory per isolate) + L2 (Cloudflare Cache API per PoP) via `lib/c
 | `/groups/best` | 60s | Yes |
 | `/share/:shareToken` | 60s | No |
 | `/groups/:groupToken` | 30s | No |
+
+`/telex-screenshot/:uuid` uses R2 as a persistent cache (checked before launching Puppeteer). Response includes `Cache-Control: public, max-age=3600`. No L1/L2 via `lib/cache.ts`. Requires `BROWSER` (Cloudflare Browser Rendering) and `MEDIA` (R2) bindings — available in `env.dev` and `env.production` only; local `wrangler dev` returns 503 for this endpoint, which the frontend handles silently via `onError`.
 
 ## Worker Code Structure
 
@@ -179,7 +184,8 @@ worker/src/
 │   ├── groups.ts               # Groups + members + best groups
 │   ├── share.ts                # Shared prediction view
 │   ├── leaderboard.ts          # Ranked leaderboard
-│   └── stats.ts                # Aggregate statistics
+│   ├── stats.ts                # Aggregate statistics
+│   └── telex-screenshot.ts     # R2-cached Puppeteer screenshot of Telex hemicycle
 └── db/
     ├── queries/
     │   ├── stats.ts            # 10+ batch queries for stats endpoint
@@ -189,12 +195,14 @@ worker/src/
     ├── schema-reset.sql         # Dev-only destructive reset
     ├── migration-005-indexes.sql
     ├── migration-006-participation-rate.sql
+    ├── migration-007-telex-tip.sql
     ├── seed.sql                 # ~20 mock predictions
     ├── seed-large.sql           # 1000 predictions + 8 groups
     └── group-names.json         # ~50 fun Hungarian names for groups
 ```
 
 `worker/scripts/recalculate-scores.ts` — batch (re)score finalized rows in D1 (`npm run db:score*`).
+`worker/scripts/test-telex-screenshot.ts` — local Puppeteer test for the screenshot logic; saves to `.telex-screenshots-test/<uuid>.png` (`npm run telex:screenshot -w worker <uuid>`).
 
 ## Draft and Finalize Model
 
@@ -203,7 +211,7 @@ worker/src/
 - `finalize()` is the only path that creates a server record.
 - Token, share link, and profile are only available after finalization.
 - Users can re-finalize (edit + finalize again) until the cutoff.
-- `PUT /predictions/:token` is only for post-finalize metadata changes (display_name, visibility).
+- `PUT /predictions/:token` updates prediction fields. After cutoff, only `display_name`, `visibility`, and `telex_tip_id` are accepted.
 
 ## Frontend Pages and Routing
 

@@ -58,9 +58,14 @@ export function usePredictionInit() {
           } else if (!cancelled.current) {
             const savedLocked = storage.getLockedPcts()
             lockedPercentsRef.current = savedLocked ?? deriveLockedPercents(localDraftRaw)
-            // Migrate drafts saved before participationRate was added
-            const migratedDraft = localDraftRaw.participationRate == null
-              ? { ...localDraftRaw, participationRate: '70' }
+            // Migrate drafts saved before participationRate or telexTipId was added
+            const needsMigration = localDraftRaw.participationRate == null || !('telexTipId' in localDraftRaw)
+            const migratedDraft = needsMigration
+              ? {
+                  ...localDraftRaw,
+                  participationRate: localDraftRaw.participationRate ?? '70',
+                  telexTipId: localDraftRaw.telexTipId ?? null,
+                }
               : localDraftRaw
             if (migratedDraft !== localDraftRaw) storage.setDraft(migratedDraft)
             setDraft(migratedDraft)
