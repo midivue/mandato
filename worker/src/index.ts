@@ -8,6 +8,7 @@ import groups from './routes/groups.js'
 import share from './routes/share.js'
 import leaderboard from './routes/leaderboard.js'
 import stats from './routes/stats.js'
+import telexScreenshot from './routes/telex-screenshot.js'
 
 const app = new Hono<AppEnv>()
 
@@ -43,23 +44,26 @@ app.use('/*', cors({
 
 app.use('/*', async (c, next) => {
   await next()
+  const isProxy = c.req.path.startsWith('/api/v1/telex-screenshot/')
   c.header('X-Content-Type-Options', 'nosniff')
   c.header('Referrer-Policy', 'strict-origin-when-cross-origin')
   c.header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains')
-  c.header('X-Frame-Options', 'DENY')
   c.header('Permissions-Policy', 'camera=(), microphone=(), geolocation=()')
-  c.header(
-    'Content-Security-Policy',
-    [
-      "default-src 'self'",
-      "script-src 'self' https://challenges.cloudflare.com",
-      "frame-src https://challenges.cloudflare.com",
-      "connect-src 'self' https://challenges.cloudflare.com",
-      "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data:",
-      "font-src 'self'",
-    ].join('; '),
-  )
+  if (!isProxy) {
+    c.header('X-Frame-Options', 'DENY')
+    c.header(
+      'Content-Security-Policy',
+      [
+        "default-src 'self'",
+        "script-src 'self' https://challenges.cloudflare.com",
+        "frame-src https://challenges.cloudflare.com",
+        "connect-src 'self' https://challenges.cloudflare.com",
+        "style-src 'self' 'unsafe-inline'",
+        "img-src 'self' data:",
+        "font-src 'self'",
+      ].join('; '),
+    )
+  }
 })
 
 const MAX_BODY_SIZE = 4096
@@ -133,5 +137,6 @@ app.route('/api/v1/groups', groups)
 app.route('/api/v1/share', share)
 app.route('/api/v1/leaderboard', leaderboard)
 app.route('/api/v1/stats', stats)
+app.route('/api/v1/telex-screenshot', telexScreenshot)
 
 export default app

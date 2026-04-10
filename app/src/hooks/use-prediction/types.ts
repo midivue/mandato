@@ -10,6 +10,7 @@ export type VotingDraft = {
   listPercents: Record<PartyId, string>
   nationalitiesPercent: string
   participationRate: string
+  telexTipId: string | null
   status: 'draft' | 'finalized'
   locationCountry: 'hu' | 'abroad'
   locationSettlement: string | null

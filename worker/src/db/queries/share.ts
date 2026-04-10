@@ -2,7 +2,7 @@ import { RESULTS_AVAILABLE } from '@mandatoto/shared/types'
 
 export async function getSharedPrediction(db: D1Database, shareToken: string) {
   const row = await db.prepare(
-    'SELECT display_name, visibility, status, list_winner_id, pct_mkkp, pct_tisza, pct_mi_hazank, pct_dk, pct_fidesz_kdnp, pct_nationalities, participation_rate, pm_winner_id, location_country, location_settlement, location_zip, location_public, finalized_at, score FROM predictions WHERE share_token = ?'
+    'SELECT display_name, visibility, status, list_winner_id, pct_mkkp, pct_tisza, pct_mi_hazank, pct_dk, pct_fidesz_kdnp, pct_nationalities, participation_rate, telex_tip_id, pm_winner_id, location_country, location_settlement, location_zip, location_public, finalized_at, score FROM predictions WHERE share_token = ?'
   )
     .bind(shareToken)
     .first()
@@ -79,6 +79,7 @@ export async function getSharedPrediction(db: D1Database, shareToken: string) {
     pctNationalities: row['pct_nationalities'] ?? null,
     pmWinnerId: row['pm_winner_id'] ?? null,
     participationRate: (row['participation_rate'] as number) ?? null,
+    telexTipId: (row['telex_tip_id'] as string) ?? null,
     locationCountry: (row['location_country'] as string) ?? 'hu',
     locationSettlement: locationIsPublic ? (row['location_settlement'] ?? null) : null,
     locationZip: locationIsPublic ? (row['location_zip'] ?? null) : null,

@@ -1,6 +1,7 @@
 name = "mandato-api"
 main = "src/index.ts"
 compatibility_date = "2025-03-27"
+compatibility_flags = ["nodejs_compat"]
 account_id = "baac650707202b718cbe63980bd28044"
 
 # Local development
@@ -9,20 +10,38 @@ binding = "DB"
 database_name = "mandato-local"
 database_id = "local"
 
+[[r2_buckets]]
+binding = "MEDIA"
+bucket_name = "mandato-media"
+
 # ── Dev cloud environment ──────────────────────────────
 [env.dev]
 name = "mandato-api-dev"
+
+[env.dev.browser]
+binding = "BROWSER"
 
 [[env.dev.d1_databases]]
 binding = "DB"
 database_name = "mandato-dev"
 database_id = "62ff3552-3a7f-42a3-984d-051060733662"
 
+[[env.dev.r2_buckets]]
+binding = "MEDIA"
+bucket_name = "mandato-media-dev"
+
 # ── Production cloud environment ──────────────────────
 [env.production]
 name = "mandato-api"
+
+[env.production.browser]
+binding = "BROWSER"
 
 [[env.production.d1_databases]]
 binding = "DB"
 database_name = "mandato-prod"
 database_id = "5767804d-99ad-45c7-af40-111c74791708"
+
+[[env.production.r2_buckets]]
+binding = "MEDIA"
+bucket_name = "mandato-media"

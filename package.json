@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "npx concurrently --names api,app --prefix-colors blue,green \"npm run dev -w worker\" \"npm run dev -w app\"",
     "dev:remote": "VITE_API_URL=https://api.dev.mandato.hu npm run dev -w app",
+    "dev:worker-remote": "npx concurrently --names api,app --prefix-colors blue,green \"npm run dev:remote -w worker\" \"npm run dev -w app\"",
     "build": "npm run build -w app && npx tsc -p worker --noEmit && npx tsc -p worker/tsconfig.scripts.json --noEmit",
     "lint": "npm run lint -w app && npm run lint -w worker",
     "db:score": "npm run db:score -w worker",
