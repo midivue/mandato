@@ -31,7 +31,7 @@ function App() {
         aria-hidden
         className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_12%_6%,rgba(24,24,27,0.09),transparent_34%),radial-gradient(circle_at_92%_-4%,rgba(113,113,122,0.13),transparent_30%)]"
       />
-      <AppHeader page={page} />
+      <AppHeader page={page} isFinalized={prediction.isFinalized} shareToken={prediction.draft?.shareToken ?? null} />
       <AnnouncementBanner />
       <main className="relative mx-auto flex w-full max-w-6xl flex-col gap-6 px-5 py-8 md:px-8 md:py-10">
         <ErrorBoundary>

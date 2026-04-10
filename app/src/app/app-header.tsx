@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Menu, Trophy, X } from 'lucide-react'
+import { Menu, Trophy, User, X } from 'lucide-react'
 import logoSvg from '@/assets/logo3.svg'
 
 type AppHeaderProps = {
   page: string
+  isFinalized: boolean
+  shareToken: string | null
 }
 
-export function AppHeader({ page }: AppHeaderProps) {
+export function AppHeader({ page, isFinalized, shareToken }: AppHeaderProps) {
   const { t } = useTranslation()
   const [mobileOpen, setMobileOpen] = useState(false)
 
@@ -32,11 +34,16 @@ export function AppHeader({ page }: AppHeaderProps) {
         : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-950'
     }`
 
+  const showMyTip = isFinalized && shareToken
+  const myTipHref = `#tipp/${shareToken}`
+  const myTipActive = page === `tipp/${shareToken}`
+
   const links = [
     { href: '#jatek', label: t('header.menuBallot'), active: page === 'jatek' || page === '' },
     { href: '#csoportok', label: t('header.menuGroups'), active: page === 'csoportok' || page.startsWith('csoport/') || page.startsWith('meghivo/') },
     { href: '#stats', label: t('header.menuStats'), active: page === 'stats' },
     { href: '#info', label: t('header.menuInfo'), active: page === 'info' },
+    ...(showMyTip ? [{ href: myTipHref, label: t('header.menuMyTip'), active: myTipActive, icon: true }] : []),
   ]
 
   return (
@@ -50,6 +57,7 @@ export function AppHeader({ page }: AppHeaderProps) {
           <nav className="hidden items-center gap-6 md:flex" aria-label="primary">
             {links.map((link) => (
               <a key={link.href} href={link.href} className={navLinkClass(link.active)}>
+                {'icon' in link && link.icon && <User className="mr-1 inline size-3.5" aria-hidden />}
                 {link.label}
               </a>
             ))}
@@ -81,7 +89,8 @@ export function AppHeader({ page }: AppHeaderProps) {
           <nav className="border-t border-zinc-200/80 pb-4 pt-3 md:hidden" aria-label="mobile">
             <div className="flex flex-col gap-1">
               {links.map((link) => (
-                <a key={link.href} href={link.href} onClick={() => setMobileOpen(false)} className={mobileNavLinkClass(link.active)}>
+                <a key={link.href} href={link.href} onClick={() => setMobileOpen(false)} className={`${'icon' in link && link.icon ? 'inline-flex items-center gap-1.5 ' : ''}${mobileNavLinkClass(link.active)}`}>
+                  {'icon' in link && link.icon && <User className="size-3.5" aria-hidden />}
                   {link.label}
                 </a>
               ))}
