@@ -27,6 +27,7 @@ export async function getStatsData(db: D1Database) {
       .bind(ref.mkkp, ref.tisza, ref.mi_hazank, ref.dk, ref.fidesz_kdnp, REFERENCE_RESULT.pctNationalities),
     /* 20 */ db.prepare("SELECT display_name, score, share_token FROM predictions WHERE score IS NOT NULL AND visibility = 'public' ORDER BY score DESC LIMIT 3"),
     /* 21 */ db.prepare("SELECT AVG(participation_rate) as avg_pr FROM predictions WHERE status = 'finalized' AND participation_rate IS NOT NULL"),
+    /* 22 */ db.prepare("SELECT COUNT(*) as count FROM predictions WHERE status = 'finalized' AND telex_tip_id IS NOT NULL"),
   ]
 
   const correctStmts = RESULTS_AVAILABLE ? [
@@ -61,12 +62,13 @@ export async function getStatsData(db: D1Database) {
   const absErrors = row(19)
   const topScorerRows = rows(20)
   const avgPrRow = row(21)
+  const telexTipRow = row(22)
 
   let correctListWinner = 0
   let correctPm = 0
   if (RESULTS_AVAILABLE) {
-    const correctList = allResults[22].results?.[0] as Record<string, unknown> | undefined
-    const correctPmRow = allResults[23].results?.[0] as Record<string, unknown> | undefined
+    const correctList = allResults[23].results?.[0] as Record<string, unknown> | undefined
+    const correctPmRow = allResults[24].results?.[0] as Record<string, unknown> | undefined
     correctListWinner = (correctList?.['count'] as number) ?? 0
     correctPm = (correctPmRow?.['count'] as number) ?? 0
   }
@@ -128,5 +130,6 @@ export async function getStatsData(db: D1Database) {
       shareToken: r['share_token'] as string,
     })) : [],
     averageParticipationRate: avgPrRow?.['avg_pr'] != null ? Number(avgPrRow['avg_pr']) : null,
+    telexTipCount: (telexTipRow?.['count'] as number) ?? 0,
   }
 }

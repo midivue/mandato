@@ -151,6 +151,7 @@ export type StatsResponse = {
   avgAbsoluteErrors: Record<PartyId, number | null> & { nationalities: number | null }
   topScorers: TopScorer[]
   averageParticipationRate: number | null
+  telexTipCount: number
 }
 
 export type GroupMember = {

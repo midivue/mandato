@@ -57,6 +57,7 @@ export const EMPTY_STATS: StatsResponse = {
   avgAbsoluteErrors: { ...Object.fromEntries(PARTY_IDS.map((id) => [id, null])), nationalities: null } as StatsResponse['avgAbsoluteErrors'],
   topScorers: [],
   averageParticipationRate: null,
+  telexTipCount: 0,
 }
 
 export function zipToCounty(zip: string): number | undefined {
