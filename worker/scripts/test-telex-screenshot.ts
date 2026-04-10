@@ -1,8 +1,10 @@
 /**
  * Local test script: takes a screenshot of the Telex hemicycle element
- * and saves it to .telex-screenshots-test/<uuid>.png
+ * and saves it to .telex-screenshots-test/<uuid>[--mobile].png
  *
- * Usage:  tsx worker/scripts/test-telex-screenshot.ts <uuid>
+ * Usage:
+ *   tsx worker/scripts/test-telex-screenshot.ts <uuid>           # desktop (1280px)
+ *   tsx worker/scripts/test-telex-screenshot.ts <uuid> --mobile  # mobile  (390px)
  *
  * Uses regular puppeteer (not @cloudflare/puppeteer) so it works without
  * wrangler --remote. The actual Worker endpoint uses @cloudflare/puppeteer
@@ -26,17 +28,29 @@ const SELECTORS = [
   '[class*="guessing"]',
 ]
 
-const uuid = process.argv[2]
-if (!uuid || !/^[0-9a-f-]{36}$/i.test(uuid)) {
-  console.error('Usage: tsx worker/scripts/test-telex-screenshot.ts <uuid>')
+const args = process.argv.slice(2)
+const uuid = args.find((a) => /^[0-9a-f-]{36}$/i.test(a))
+const isMobile = args.includes('--mobile')
+
+if (!uuid) {
+  console.error('Usage: tsx worker/scripts/test-telex-screenshot.ts <uuid> [--mobile]')
   process.exit(1)
 }
 
-console.log(`Screenshotting https://telex.hu/melleklet/valasztas-2026/tippjatek/${uuid}`)
+const variant = isMobile ? 'mobile' : 'desktop'
+console.log(`[${variant}] Screenshotting https://telex.hu/melleklet/valasztas-2026/tippjatek/${uuid}`)
 
 const browser = await puppeteer.launch({ headless: true })
 const page = await browser.newPage()
-await page.setViewport({ width: 1280, height: 900, deviceScaleFactor: 2 })
+
+if (isMobile) {
+  // 390×844 = iPhone 14 width — below Tailwind's md: breakpoint (768px).
+  // Keep Chrome desktop UA to avoid server-side UA blocking; responsive layout
+  // is driven by CSS viewport width, not the user-agent string.
+  await page.setViewport({ width: 390, height: 844, deviceScaleFactor: 3 })
+} else {
+  await page.setViewport({ width: 1280, height: 900, deviceScaleFactor: 2 })
+}
 
 // Block ad/campaign/YouTube domains that inject popups and overlays
 await page.setRequestInterception(true)
@@ -133,45 +147,52 @@ if (!el) {
   process.exit(1)
 }
 
-// Compute a tight clip by finding the rightmost edge of actual content:
-// the hemicycle SVG and the legend list items.
-const clip = await page.evaluate(`(function(sel){
-  var container = document.querySelector(sel);
-  if (!container) return null;
-  var containerRect = container.getBoundingClientRect();
+// On desktop: compute a tight clip by finding the rightmost edge of actual
+// content (hemicycle SVG + legend list items) to exclude empty right space.
+// On mobile: the container is full-width so skip the tight clip — just
+// screenshot the element directly.
+let clip: { x: number; y: number; width: number; height: number } | null = null
 
-  // Target only text-bearing content nodes for the right-edge calculation.
-  // Exclude svg/canvas — they are full-width even if content only draws on the left.
-  var contentSelectors = 'li, span, p, strong, b';
-  var maxRight = containerRect.left;
-  var nodes = Array.from(container.querySelectorAll(contentSelectors));
-  nodes.forEach(function(node){
-    var s = window.getComputedStyle(node);
-    if (s.display === 'none' || s.visibility === 'hidden') return;
-    var r = node.getBoundingClientRect();
-    if (r.width > 0 && r.height > 0 && r.right > maxRight) {
-      maxRight = r.right;
-    }
-  });
-  if (maxRight <= containerRect.left) maxRight = containerRect.right;
+if (!isMobile) {
+  clip = await page.evaluate(`(function(sel){
+    var container = document.querySelector(sel);
+    if (!container) return null;
+    var containerRect = container.getBoundingClientRect();
 
-  var padding = 32;
-  return {
-    x: containerRect.left,
-    y: containerRect.top,
-    width: Math.min(maxRight - containerRect.left + padding, containerRect.width),
-    height: containerRect.height,
-  };
-})(${JSON.stringify(matched)})`) as { x: number; y: number; width: number; height: number } | null
+    // Target only text-bearing content nodes for the right-edge calculation.
+    // Exclude svg/canvas — they are full-width even if content only draws on the left.
+    var contentSelectors = 'li, span, p, strong, b';
+    var maxRight = containerRect.left;
+    var nodes = Array.from(container.querySelectorAll(contentSelectors));
+    nodes.forEach(function(node){
+      var s = window.getComputedStyle(node);
+      if (s.display === 'none' || s.visibility === 'hidden') return;
+      var r = node.getBoundingClientRect();
+      if (r.width > 0 && r.height > 0 && r.right > maxRight) {
+        maxRight = r.right;
+      }
+    });
+    if (maxRight <= containerRect.left) maxRight = containerRect.right;
 
-console.log('Clip region:', clip)
+    var padding = 32;
+    return {
+      x: containerRect.left,
+      y: containerRect.top,
+      width: Math.min(maxRight - containerRect.left + padding, containerRect.width),
+      height: containerRect.height,
+    };
+  })(${JSON.stringify(matched)})`) as { x: number; y: number; width: number; height: number } | null
+}
+
+console.log(isMobile ? 'Mobile: element screenshot (no clip)' : `Clip region: ${JSON.stringify(clip)}`)
 
 const png = clip
   ? await page.screenshot({ type: 'png', clip })
   : await el.screenshot({ type: 'png' })
 
 await mkdir(OUT_DIR, { recursive: true })
-const outPath = resolve(OUT_DIR, `${uuid}.png`)
+const filename = isMobile ? `${uuid}-mobile.png` : `${uuid}.png`
+const outPath = resolve(OUT_DIR, filename)
 await writeFile(outPath, png)
 console.log(`Saved: ${outPath}`)
 
