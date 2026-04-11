@@ -4,7 +4,10 @@ import { Check, ExternalLink, Link2, X } from 'lucide-react'
 import type { VotingDraft } from '@/hooks/use-prediction'
 
 const TELEX_BASE = 'https://telex.hu/melleklet/valasztas-2026/tippjatek/'
+// Full-string test (with anchors) — used to validate a bare UUID input
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+// Substring search (no anchors) — used to find a UUID anywhere inside a URL path
+const UUID_IN_PATH = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i
 
 function extractTelexId(input: string): string | null {
   const trimmed = input.trim()
@@ -12,9 +15,10 @@ function extractTelexId(input: string): string | null {
   try {
     const url = new URL(trimmed)
     if (url.hostname === 'telex.hu' && url.pathname.includes('/tippjatek/')) {
-      // Match the UUID anywhere in the path — handles both the normal form
-      // (.../tippjatek/<uuid>) and the Telex copy-link bug (.../tippjatek//<uuid>)
-      const match = url.pathname.match(UUID_RE)
+      // UUID_IN_PATH has no anchors so it finds the UUID anywhere in the path,
+      // handling both the normal form (.../tippjatek/<uuid>) and the Telex
+      // copy-link bug (.../tippjatek//<uuid>)
+      const match = url.pathname.match(UUID_IN_PATH)
       if (match) return match[0]
     }
   } catch {
