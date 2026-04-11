@@ -11,9 +11,11 @@ function extractTelexId(input: string): string | null {
   if (UUID_RE.test(trimmed)) return trimmed
   try {
     const url = new URL(trimmed)
-    if (url.hostname === 'telex.hu' && url.pathname.startsWith('/melleklet/valasztas-2026/tippjatek/')) {
-      const id = url.pathname.replace('/melleklet/valasztas-2026/tippjatek/', '').replace(/\/$/, '')
-      if (UUID_RE.test(id)) return id
+    if (url.hostname === 'telex.hu' && url.pathname.includes('/tippjatek/')) {
+      // Match the UUID anywhere in the path — handles both the normal form
+      // (.../tippjatek/<uuid>) and the Telex copy-link bug (.../tippjatek//<uuid>)
+      const match = url.pathname.match(UUID_RE)
+      if (match) return match[0]
     }
   } catch {
     // not a valid URL — fall through
