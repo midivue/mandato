@@ -11,7 +11,7 @@ import { RESULTS_AVAILABLE } from '@mandatoto/shared/types'
 
 import { ResultsSummary } from './results-summary'
 import { BestGroupsSection } from './best-groups-section'
-import { LeaderboardTable } from './leaderboard-table'
+import { LeaderboardTabs } from './leaderboard-tabs'
 
 type LeaderboardPageProps = {
   currentToken: string | null
@@ -52,7 +52,7 @@ export function LeaderboardPage({ currentToken }: LeaderboardPageProps) {
 
           <BestGroupsSection bestGroups={bestGroups} />
 
-          <LeaderboardTable entries={entries} loading={loading} currentToken={currentToken} />
+          <LeaderboardTabs entries={entries} loading={loading} currentToken={currentToken} />
         </CardContent>
       </Card>
     </section>
