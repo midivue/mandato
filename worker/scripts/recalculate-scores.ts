@@ -9,6 +9,7 @@
  *
  * Flags:
  *   --dry-run        Print counts and first rows; no SQL writes
+ *   --null-only      Only process rows where score IS NULL (skip already-scored rows)
  *   --confirm-prod   Required when target is prod
  */
 
@@ -37,15 +38,17 @@ type D1Row = Record<string, unknown>
 function parseArgs(argv: string[]) {
   let target: Target = 'local'
   let dryRun = false
+  let nullOnly = false
   let confirmProd = false
   const unknown: string[] = []
   for (const a of argv) {
     if (a === '--dry-run') dryRun = true
+    else if (a === '--null-only') nullOnly = true
     else if (a === '--confirm-prod') confirmProd = true
     else if (a === 'local' || a === 'dev' || a === 'prod') target = a
     else unknown.push(a)
   }
-  return { target, dryRun, confirmProd, unknown }
+  return { target, dryRun, nullOnly, confirmProd, unknown }
 }
 
 function d1ExecuteJson(dbName: string, extraArgs: string[], command: string): D1Row[] {
@@ -106,10 +109,10 @@ function rowToInput(row: D1Row) {
   }
 }
 
-const SELECT_SQL = `SELECT token, list_winner_id, pm_winner_id, pct_mkkp, pct_tisza, pct_mi_hazank, pct_dk, pct_fidesz_kdnp, pct_nationalities, participation_rate, score FROM predictions WHERE status = 'finalized'`
+const SELECT_COLS = `token, list_winner_id, pm_winner_id, pct_mkkp, pct_tisza, pct_mi_hazank, pct_dk, pct_fidesz_kdnp, pct_nationalities, participation_rate, score`
 
 function main() {
-  const { target, dryRun, confirmProd, unknown } = parseArgs(process.argv.slice(2))
+  const { target, dryRun, nullOnly, confirmProd, unknown } = parseArgs(process.argv.slice(2))
   if (unknown.length > 0) {
     console.error('Unknown arguments:', unknown.join(' '))
     process.exit(1)
@@ -122,9 +125,12 @@ function main() {
   const dbName = TARGET_DB[target]
   const wranglerDbArgs = target === 'local' ? (['--local'] as const) : (['--remote'] as const)
 
-  console.error(`Target: ${target} (${dbName})${dryRun ? ' [dry-run]' : ''}`)
+  const selectSql = `SELECT ${SELECT_COLS} FROM predictions WHERE status = 'finalized'${nullOnly ? ' AND score IS NULL' : ''}`
 
-  const rows = d1ExecuteJson(dbName, [...wranglerDbArgs], SELECT_SQL)
+  const flags = [dryRun && '[dry-run]', nullOnly && '[null-only]'].filter(Boolean).join(' ')
+  console.error(`Target: ${target} (${dbName})${flags ? ' ' + flags : ''}`)
+
+  const rows = d1ExecuteJson(dbName, [...wranglerDbArgs], selectSql)
   console.error(`Finalized predictions: ${rows.length}`)
 
   const updates: { token: string; score: number; prev: number | null }[] = []

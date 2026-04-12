@@ -30,6 +30,9 @@
     "db:score": "tsx scripts/recalculate-scores.ts local",
     "db:score:dev": "tsx scripts/recalculate-scores.ts dev",
     "db:score:prod": "tsx scripts/recalculate-scores.ts prod",
+    "db:score:null": "tsx scripts/recalculate-scores.ts local --null-only",
+    "db:score:null:dev": "tsx scripts/recalculate-scores.ts dev --null-only",
+    "db:score:null:prod": "tsx scripts/recalculate-scores.ts prod --null-only",
     "telex:screenshot": "tsx scripts/test-telex-screenshot.ts",
     "telex:screenshot:mobile": "tsx scripts/test-telex-screenshot.ts --mobile"
   },
