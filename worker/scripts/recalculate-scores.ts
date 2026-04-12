@@ -157,13 +157,12 @@ function main() {
     return
   }
 
-  const lines = ['BEGIN TRANSACTION;']
+  const lines: string[] = []
   for (const u of updates) {
     lines.push(
       `UPDATE predictions SET score = ${JSON.stringify(u.score)} WHERE token = '${u.token}';`,
     )
   }
-  lines.push('COMMIT;')
   const sqlPath = join(tmpdir(), `mandato-recalc-scores-${Date.now()}.sql`)
   try {
     writeFileSync(sqlPath, lines.join('\n'), 'utf-8')
