@@ -544,7 +544,7 @@
     }
   },
   "banner": {
-    "text": "A szavazás elkezdődött, a tippjáték lezárult. Az első eredmények a 19:00 órai urnazárás után min. 60%-os feldolgozottságnál frissülnek először az oldalon.",
+    "text": "Az eredmények közel véglegesnek tekinthetőek 96.37%-os feldolgozottságnál. Következő frissítés 100%-nál. Köszi, hogy játszottatok!",
     "cta": "Saját tipped",
     "dismiss": "Értesítés bezárása"
   },
