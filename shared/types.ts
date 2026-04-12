@@ -2,7 +2,7 @@ export type PartyId = 'mkkp' | 'tisza' | 'mi_hazank' | 'dk' | 'fidesz_kdnp'
 
 export const PARTY_IDS: PartyId[] = ['mkkp', 'tisza', 'mi_hazank', 'dk', 'fidesz_kdnp']
 
-export const TOTAL_ELIGIBLE_VOTERS = 7_618_706
+export const TOTAL_ELIGIBLE_VOTERS = 8_114_688
 
 export type PredictionVisibility = 'public' | 'private'
 export type PredictionStatus = 'draft' | 'finalized'
@@ -188,7 +188,7 @@ export type BestGroupEntry = {
 }
 
 export const RESULTS_AVAILABLE = false
-export const VOTE_PROCESSING_PCT = 80
+export const VOTE_PROCESSING_PCT = 100
 export const CUTOFF_AT = '2026-04-12T06:00:00+02:00'
 export const PARTY_LIST_THRESHOLD = 5
 
@@ -198,18 +198,28 @@ export type ElectionResult = {
   percentages: Record<PartyId, number>
   pctNationalities: number
   participationRate: number
+  mandates: Record<PartyId, number>
+  nationalitiesMandate: number
 }
 
 export const REFERENCE_RESULT: ElectionResult = {
   listWinnerId: 'tisza' as PartyId,
   pmWinnerId: 'tisza' as PartyId,
   percentages: {
-    mkkp: 2.8,
-    tisza: 44.6,
-    mi_hazank: 6.9,
-    dk: 4.3,
-    fidesz_kdnp: 35.2,
+    mkkp: 0.61,
+    tisza: 56.94,
+    mi_hazank: 4.89,
+    dk: 0.75,
+    fidesz_kdnp: 36.20,
   },
-  pctNationalities: 0.44,
-  participationRate: 68.0,
+  pctNationalities: 0.61,
+  participationRate: 74.23,
+  mandates: {
+    mkkp: 0,
+    tisza: 133,
+    mi_hazank: 0,
+    dk: 0,
+    fidesz_kdnp: 65,
+  },
+  nationalitiesMandate: 1,
 }
