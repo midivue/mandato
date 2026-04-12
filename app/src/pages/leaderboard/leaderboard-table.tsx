@@ -26,7 +26,6 @@ type LeaderboardTableProps = {
 export function LeaderboardTable({
   entries,
   loading,
-  currentToken: _currentToken,
   hideHeader = false,
   displayedEntries,
   userShareToken,
