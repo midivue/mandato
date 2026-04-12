@@ -544,8 +544,8 @@
     }
   },
   "banner": {
-    "text": "New feature: attach your Telex mandate tip to your profile before the submission deadline!",
-    "cta": "Add it now",
+    "text": "Voting has begun and submissions are closed. Results will first update after the 19:00 polls close, once at least 60% of votes have been processed.",
+    "cta": "Your tip",
     "dismiss": "Dismiss notification"
   },
   "telex": {

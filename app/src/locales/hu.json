@@ -544,8 +544,8 @@
     }
   },
   "banner": {
-    "text": "Új funkció: add hozzá a Telex mandátum tipped is a profilodhoz a leadási határidő előtt!",
-    "cta": "Kitöltöm",
+    "text": "A szavazás elkezdődött, a tippjáték lezárult. Az első eredmények a 19:00 órai urnazárás után min. 60%-os feldolgozottságnál frissülnek először az oldalon.",
+    "cta": "Saját tipped",
     "dismiss": "Értesítés bezárása"
   },
   "telex": {
