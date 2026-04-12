@@ -187,8 +187,8 @@ export type BestGroupEntry = {
   avgScore: number | null
 }
 
-export const RESULTS_AVAILABLE = false
-export const VOTE_PROCESSING_PCT = 100
+export const RESULTS_AVAILABLE = true
+export const VOTE_PROCESSING_PCT = 53.5
 export const CUTOFF_AT = '2026-04-12T06:00:00+02:00'
 export const PARTY_LIST_THRESHOLD = 5
 
@@ -206,20 +206,20 @@ export const REFERENCE_RESULT: ElectionResult = {
   listWinnerId: 'tisza' as PartyId,
   pmWinnerId: 'tisza' as PartyId,
   percentages: {
-    mkkp: 0.61,
-    tisza: 56.94,
-    mi_hazank: 4.89,
-    dk: 0.75,
-    fidesz_kdnp: 36.20,
+    mkkp: 0.78,
+    tisza: 52.49,
+    mi_hazank: 6.08,
+    dk: 1.19,
+    fidesz_kdnp: 38.83,
   },
   pctNationalities: 0.61,
   participationRate: 74.23,
   mandates: {
     mkkp: 0,
-    tisza: 133,
-    mi_hazank: 0,
+    tisza: 136,
+    mi_hazank: 6,
     dk: 0,
-    fidesz_kdnp: 65,
+    fidesz_kdnp: 56,
   },
   nationalitiesMandate: 1,
 }
