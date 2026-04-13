@@ -213,7 +213,7 @@ export const REFERENCE_RESULT: ElectionResult = {
     fidesz_kdnp: 39.15,
   },
   pctNationalities: 0.71,
-  participationRate: 77.80,
+  participationRate: 79.55,
   mandates: {
     mkkp: 0,
     tisza: 136,
