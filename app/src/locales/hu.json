@@ -544,7 +544,7 @@
     }
   },
   "banner": {
-    "text": "Az eredmények közel véglegesnek tekinthetőek 98,22%-os feldolgozottságnál. Következő frissítés 100%-nál. Köszi, hogy játszottatok!",
+    "text": "Az eredmények véglegesek, 100% a feldolgozottság. Köszi, hogy játszottatok!",
     "cta": "Saját tipped",
     "dismiss": "Értesítés bezárása"
   },
